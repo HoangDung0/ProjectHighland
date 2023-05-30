@@ -8,7 +8,6 @@ import hoangdung.springboot.projecthighlands.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +17,7 @@ public class AddressesService {
     private static AddressesRepository addressesRepository;
 
     private static UserRepository userRepository;
-
+//
 //    public static ObjectMapper objectMapper = new ObjectMapper();
 //
 //    public static List<AddressesDto> convertListAddressesIDToListAddresses(String listAddressesID) throws JsonProcessingException {
@@ -31,7 +30,7 @@ public class AddressesService {
 //    public String convertListAddressesToListAddressesID(List<AddressesDto> listAddressDto) throws JsonProcessingException {
 //        List<String> listAddressID = listAddressDto
 //                .stream()
-//                .map( addresses -> addresses.getAddressesID())
+//                .map(AddressesDto::getAddressesID)
 //                .toList();
 //        return objectMapper.writeValueAsString(listAddressID);
 //    }
@@ -42,12 +41,17 @@ public class AddressesService {
 
     public List<AddressesResponseEntity> getAllAddressesByUserID(String id) {
 //        String listAddressesID = addressesRepository.getListAddressesID(id);
-        List<AddressesDto> listAddressesDto = addressesRepository.getListAddressesByUserID(id);
-        List<AddressesResponseEntity> listAddressesResponseEntity = new ArrayList<>();
-        for (AddressesDto addressDto : listAddressesDto) {
-           listAddressesResponseEntity.add(AddressesResponseEntity.fromAddressesDto(addressDto));
-        }
-        return listAddressesResponseEntity;
+//        List<AddressesDto> listAddressesDto = addressesRepository.getListAddressesByUserID(id);
+//        List<AddressesResponseEntity> listAddressesResponseEntity = new ArrayList<>();
+//        for (AddressesDto addressDto : listAddressesDto) {
+//           listAddressesResponseEntity.add(AddressesResponseEntity.fromAddressesDto(addressDto));
+//        }
+//        return listAddressesResponseEntity;
+
+        return addressesRepository.getListAddressesByUserID(id)
+                .stream()
+                .map(AddressesResponseEntity::fromAddressesDto)
+                .toList();
 
     }
 
