@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -26,7 +27,8 @@ public class CommonUtils {
 
         var mappings = (LinkedHashMap<Class<?>, Supplier<?>>) Map.of(
                 NullPointerException.class, (Supplier<?>) ResponseEntity::notFound,
-                IllegalArgumentException.class, (Supplier<?>) ResponseEntity::badRequest
+                IllegalArgumentException.class, (Supplier<?>) ResponseEntity::badRequest,
+                NoSuchElementException.class, (Supplier<?>) ResponseEntity::notFound
         );
 
         return (ResponseEntity<?>) mappings.getOrDefault(

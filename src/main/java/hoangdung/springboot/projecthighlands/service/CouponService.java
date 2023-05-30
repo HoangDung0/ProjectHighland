@@ -35,6 +35,7 @@ public class CouponService {
     }
 
 
+    // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
     public CouponResponseEntity createNewCoupon(CouponRequestEntity entity) {
         CouponDto preparedCoupon = CouponDto.builder()
                 .couponName(entity.getCouponName())
