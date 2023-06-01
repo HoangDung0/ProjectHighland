@@ -29,18 +29,18 @@ public class UserController {
     public UserRequestEntity userRequestEntity;
 
     @GetMapping
-    private ResponseEntity getAllUser()throws JsonProcessingException {
+    private ResponseEntity<?> getAllUser()throws JsonProcessingException {
         return controllerWrapper(userService::getAllUsers);
 //        return  ResponseEntity.ok().body(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity getUserByID(@PathVariable String id) throws JsonProcessingException {
+    private ResponseEntity<?> getUserByID(@PathVariable String id) throws JsonProcessingException {
         return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @GetMapping("/search")
-    private ResponseEntity searchUsersByName(@RequestParam String name) throws JsonProcessingException {
+    private ResponseEntity<?> searchUsersByName(@RequestParam String name) throws JsonProcessingException {
         return ResponseEntity.ok().body(userService.searchUsersByName(name));
     }
 
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity updateExistingUser(@PathVariable String id,
+    private ResponseEntity<?> updateExistingUser(@PathVariable String id,
                                               @RequestBody UserRequestEntity dto)  {
 
         // PUT /users/{id}      => userWithId.update(newUser)
@@ -60,13 +60,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}/role")
-    private ResponseEntity updateUserRoleOfExistingUser(@PathVariable String id,
+    private ResponseEntity<?> updateUserRoleOfExistingUser(@PathVariable String id,
                                                         @RequestBody String newRole)  {
         return ResponseEntity.ok().body(userService.updateUserRoleOfExistingUser(id, newRole));
     }
 
     @DeleteMapping()
-    private ResponseEntity deleteUserByID(@RequestParam String id)  {
+    private ResponseEntity<?> deleteUserByID(@RequestParam String id)  {
         return ResponseEntity.ok().body(userService.deleteUserByID(id));
     }
 
@@ -74,32 +74,32 @@ public class UserController {
     // Addresses Controller
 
     @GetMapping("/{id}/adrresses/{addressID}")
-    private ResponseEntity getAllAddressesByUserID(@PathVariable String id,
+    private ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id,
                                                    @PathVariable String addressID){
         return controllerWrapper(() -> addressesService.getAddressesById(addressID));
 //        return ResponseEntity.ok().body(addressesService.getAddressesById(addressID));
     }
 
     @GetMapping("/{id}/addresses")
-    private ResponseEntity getAllAddressesByUserID(@PathVariable String id) {
+    private ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id) {
         return ResponseEntity.ok().body(addressesService.getAllAddressesByUserID(id));
     }
 
     @PostMapping("/{id}/addresses")
-    public ResponseEntity createNewAddresses(@PathVariable String id,
+    public ResponseEntity<?> createNewAddresses(@PathVariable String id,
                                              @RequestBody AddressesRequestEntity requestEntity) {
         return ResponseEntity.ok().body(addressesService.createNewAddresses(id, requestEntity));
     }
 
     @PutMapping("/{id}/addresses/{addressID}")
-    private ResponseEntity updateExistingAddresses(@PathVariable String id,
+    private ResponseEntity<?> updateExistingAddresses(@PathVariable String id,
                                                    @PathVariable String addressID,
                                                    @RequestBody AddressesRequestEntity requestEntity) {
         return ResponseEntity.ok().body(addressesService.updateExistingAddresses(addressID, requestEntity));
     }
 
     @DeleteMapping("/{id}/addresses")
-    private ResponseEntity deleteAddressesByID(@PathVariable String id,
+    private ResponseEntity<?> deleteAddressesByID(@PathVariable String id,
                                                @RequestParam String addressID) {
         return ResponseEntity.ok().body(addressesService.deleteAddressesByID(addressID));
     }

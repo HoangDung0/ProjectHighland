@@ -3,7 +3,6 @@ package hoangdung.springboot.projecthighlands.common;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
@@ -25,7 +24,7 @@ public class CommonUtils {
 
     public static ResponseEntity<?> switchException(Exception e) {
 
-        var mappings = (LinkedHashMap<Class<?>, Supplier<?>>) Map.of(
+        var mappings = (Map<Class<? extends RuntimeException>, Supplier<? extends Object>>) Map.of(
                 NullPointerException.class, (Supplier<?>) ResponseEntity::notFound,
                 IllegalArgumentException.class, (Supplier<?>) ResponseEntity::badRequest,
                 NoSuchElementException.class, (Supplier<?>) ResponseEntity::notFound

@@ -9,7 +9,6 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class UserResponseEntity {
 
     private String userID;

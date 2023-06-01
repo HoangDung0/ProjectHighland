@@ -15,33 +15,33 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping
-    private ResponseEntity getAllTags() {
+    private ResponseEntity<?> getAllTags() {
         return ResponseEntity.ok().body(tagService.getAllTags());
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity getTagByID(@PathVariable String id) {
+    private ResponseEntity<?> getTagByID(@PathVariable String id) {
         return ResponseEntity.ok().body(tagService.getTagByID(id));
     }
 
     @GetMapping("/search")
-    private ResponseEntity searchTagsByName(@RequestParam String name) {
+    private ResponseEntity<?> searchTagsByName(@RequestParam String name) {
         return ResponseEntity.ok().body(tagService.searchTagsByName(name));
     }
 
     @PostMapping()
-    public ResponseEntity createNewTag(@RequestBody TagRequestEntity dto) {
+    public ResponseEntity<?> createNewTag(@RequestBody TagRequestEntity dto) {
         return ResponseEntity.ok().body(tagService.createNewTag(dto));
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity updateExistingTag(@PathVariable String id,
+    private ResponseEntity<?> updateExistingTag(@PathVariable String id,
                                              @RequestBody TagRequestEntity dto) {
         return ResponseEntity.ok().body(tagService.updateExistingTag(id, dto));
     }
 
     @DeleteMapping()
-    private ResponseEntity deleteTagByID(@RequestParam String id) {
+    private ResponseEntity<?> deleteTagByID(@RequestParam String id) {
         return ResponseEntity.ok().body(tagService.deleteTagByID(id));
     }
 }
