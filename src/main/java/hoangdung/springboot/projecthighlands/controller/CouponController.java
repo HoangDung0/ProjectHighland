@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
+
 @RestController
 @Controller
 @RequiredArgsConstructor
@@ -21,27 +23,27 @@ public class CouponController {
 
     @GetMapping("/{name}")
     private ResponseEntity<?> getCouponByCouponCode(@PathVariable String name) {
-        return ResponseEntity.ok().body(couponService.getCouponByCouponCode(name));
+        return controllerWrapper(() -> couponService.getCouponByCouponCode(name));
     }
 
-    @GetMapping("/search")
+    @GetMapping()
     private ResponseEntity<?> searchCouponByCouponName(@RequestParam String name) {
-        return ResponseEntity.ok().body(couponService.searchCouponByCouponName(name));
+        return controllerWrapper(() -> couponService.searchCouponByCouponName(name));
     }
 
     @PostMapping()
     public ResponseEntity<?> createNewCoupon(@RequestBody CouponRequestEntity entity) {
-        return ResponseEntity.ok().body(couponService.createNewCoupon(entity));
+        return controllerWrapper(() -> couponService.createNewCoupon(entity));
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingCoupon(@PathVariable String id,
-                                                        @RequestBody CouponRequestEntity entity) {
-        return ResponseEntity.ok().body(couponService.updateExistingCoupon(id, entity));
+                                                   @RequestBody CouponRequestEntity entity) {
+        return controllerWrapper(() -> couponService.updateExistingCoupon(id, entity));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteCouponByID(@RequestParam String id) {
-        return ResponseEntity.ok().body(couponService.deleteCouponByID(id));
+        return controllerWrapper(() -> couponService.deleteCouponByID(id));
     }
 }

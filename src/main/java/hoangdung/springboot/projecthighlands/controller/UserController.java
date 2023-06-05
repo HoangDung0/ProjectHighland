@@ -36,17 +36,17 @@ public class UserController {
 
     @GetMapping("/{id}")
     private ResponseEntity<?> getUserByID(@PathVariable String id) throws JsonProcessingException {
-        return ResponseEntity.ok().body(userService.getUserById(id));
+        return controllerWrapper(() -> userService.getUserById(id));
     }
 
     @GetMapping("/search")
     private ResponseEntity<?> searchUsersByName(@RequestParam String name) throws JsonProcessingException {
-        return ResponseEntity.ok().body(userService.searchUsersByName(name));
+        return controllerWrapper(() -> userService.searchUsersByName(name));
     }
 
     @PostMapping()
     public ResponseEntity<?> createNewUser(@RequestBody UserRequestEntity dto) throws JsonProcessingException {
-        return ResponseEntity.ok().body(userService.createNewUser(dto));
+        return controllerWrapper(() -> userService.createNewUser(dto));
     }
 
     @PutMapping("/{id}")
@@ -56,18 +56,18 @@ public class UserController {
         // PUT /users/{id}      => userWithId.update(newUser)
         // PUT /users/{id}/role => userWithId.setRole(newRole)
 
-        return ResponseEntity.ok().body(userService.updateExistingUser(id, dto));
+        return controllerWrapper(() -> userService.updateExistingUser(id, dto));
     }
 
     @PutMapping("/{id}/role")
     private ResponseEntity<?> updateUserRoleOfExistingUser(@PathVariable String id,
                                                         @RequestBody String newRole)  {
-        return ResponseEntity.ok().body(userService.updateUserRoleOfExistingUser(id, newRole));
+        return controllerWrapper(() -> userService.updateUserRoleOfExistingUser(id, newRole));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteUserByID(@RequestParam String id)  {
-        return ResponseEntity.ok().body(userService.deleteUserByID(id));
+        return controllerWrapper(() -> userService.deleteUserByID(id));
     }
 
 
@@ -82,26 +82,26 @@ public class UserController {
 
     @GetMapping("/{id}/addresses")
     private ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id) {
-        return ResponseEntity.ok().body(addressesService.getAllAddressesByUserID(id));
+        return controllerWrapper(() -> addressesService.getAllAddressesByUserID(id));
     }
 
     @PostMapping("/{id}/addresses")
     public ResponseEntity<?> createNewAddresses(@PathVariable String id,
                                              @RequestBody AddressesRequestEntity requestEntity) {
-        return ResponseEntity.ok().body(addressesService.createNewAddresses(id, requestEntity));
+        return controllerWrapper(() -> addressesService.createNewAddresses(id, requestEntity));
     }
 
     @PutMapping("/{id}/addresses/{addressID}")
     private ResponseEntity<?> updateExistingAddresses(@PathVariable String id,
                                                    @PathVariable String addressID,
                                                    @RequestBody AddressesRequestEntity requestEntity) {
-        return ResponseEntity.ok().body(addressesService.updateExistingAddresses(addressID, requestEntity));
+        return controllerWrapper(() -> addressesService.updateExistingAddresses(addressID, requestEntity));
     }
 
     @DeleteMapping("/{id}/addresses")
     private ResponseEntity<?> deleteAddressesByID(@PathVariable String id,
                                                @RequestParam String addressID) {
-        return ResponseEntity.ok().body(addressesService.deleteAddressesByID(addressID));
+        return controllerWrapper(() -> addressesService.deleteAddressesByID(addressID));
     }
 
 

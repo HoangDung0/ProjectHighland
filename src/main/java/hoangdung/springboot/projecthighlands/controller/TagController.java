@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
+
 @RestController
 @Controller
 @RequiredArgsConstructor
@@ -16,32 +18,32 @@ public class TagController {
 
     @GetMapping
     private ResponseEntity<?> getAllTags() {
-        return ResponseEntity.ok().body(tagService.getAllTags());
+        return controllerWrapper(tagService::getAllTags);
     }
 
     @GetMapping("/{id}")
     private ResponseEntity<?> getTagByID(@PathVariable String id) {
-        return ResponseEntity.ok().body(tagService.getTagByID(id));
+        return controllerWrapper(() -> tagService.getTagByID(id));
     }
 
     @GetMapping("/search")
     private ResponseEntity<?> searchTagsByName(@RequestParam String name) {
-        return ResponseEntity.ok().body(tagService.searchTagsByName(name));
+        return controllerWrapper(() -> tagService.searchTagsByName(name));
     }
 
     @PostMapping()
     public ResponseEntity<?> createNewTag(@RequestBody TagRequestEntity dto) {
-        return ResponseEntity.ok().body(tagService.createNewTag(dto));
+        return controllerWrapper(() -> tagService.createNewTag(dto));
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingTag(@PathVariable String id,
                                              @RequestBody TagRequestEntity dto) {
-        return ResponseEntity.ok().body(tagService.updateExistingTag(id, dto));
+        return controllerWrapper(() -> tagService.updateExistingTag(id, dto));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteTagByID(@RequestParam String id) {
-        return ResponseEntity.ok().body(tagService.deleteTagByID(id));
+        return controllerWrapper(() -> tagService.deleteTagByID(id));
     }
 }

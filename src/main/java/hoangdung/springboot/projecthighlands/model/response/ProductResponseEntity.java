@@ -1,17 +1,21 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import jakarta.persistence.*;
+import hoangdung.springboot.projecthighlands.model.dto.ProductDto;
+import hoangdung.springboot.projecthighlands.service.ProductService;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Entity
-@NoArgsConstructor
-@Table(name = "tbl_product")
-public class Product {
+import java.util.List;
+import java.util.Map;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductResponseEntity {
+
     private String productID;
 
     private String productName;
@@ -22,14 +26,25 @@ public class Product {
 
     private String imageUrl;
 
-    private String sizeOptionJsonString;
+    private Map<String, Integer> sizeOption;
 
+    private List<TagResponseEntity> listTag;
 
+    private String productCatalogID;
 
+    public static ProductResponseEntity fromProductDto(ProductDto dto)  {
 
-
-
-
+        return ProductResponseEntity.builder()
+                .productID(dto.getProductID())
+                .productName(dto.getProductName())
+                .description(dto.getDescription())
+                .price(dto.getPrice())
+                .imageUrl(dto.getImageUrl())
+                .sizeOption(ProductService.convertSizeOptionStringToMap(dto.getSizeOptionJsonString()))
+                .listTag(ProductService.convertListTagIDToListTag(dto.getTagJsonString()))
+                .productCatalogID(dto.getProductCatalogDto().getProductCatalogID())
+                .build();
+    }
 
 
 }

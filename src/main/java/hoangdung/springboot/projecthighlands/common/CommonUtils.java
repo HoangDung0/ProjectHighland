@@ -1,5 +1,6 @@
 package hoangdung.springboot.projecthighlands.common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +28,8 @@ public class CommonUtils {
         var mappings = (Map<Class<? extends RuntimeException>, Supplier<? extends Object>>) Map.of(
                 NullPointerException.class, (Supplier<?>) ResponseEntity::notFound,
                 IllegalArgumentException.class, (Supplier<?>) ResponseEntity::badRequest,
-                NoSuchElementException.class, (Supplier<?>) ResponseEntity::notFound
+                NoSuchElementException.class, (Supplier<?>) ResponseEntity::notFound,
+                JsonProcessingException.class, (Supplier<?>) ResponseEntity::badRequest
         );
 
         return (ResponseEntity<?>) mappings.getOrDefault(

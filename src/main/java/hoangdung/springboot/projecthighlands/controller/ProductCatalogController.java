@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
+
 @RestController
 @Controller
 @RequiredArgsConstructor
@@ -17,32 +19,32 @@ public class ProductCatalogController {
 
     @GetMapping
     private ResponseEntity<?> getAllProductCatalogs() {
-        return ResponseEntity.ok().body(catalogService.getAllProductCatalogs());
+        return controllerWrapper(catalogService::getAllProductCatalogs);
     }
 
     @GetMapping("/{id}")
     private ResponseEntity<?> getProductCatalogById(@PathVariable String id) {
-        return ResponseEntity.ok().body(catalogService.getProductCatalogById(id));
+        return controllerWrapper(() -> catalogService.getProductCatalogById(id));
     }
 
     @GetMapping("/search")
     private ResponseEntity<?> searchProductCatalogsByName(@RequestParam String name) {
-        return ResponseEntity.ok().body(catalogService.searchProductCatalogsByName(name));
+        return controllerWrapper(() -> catalogService.searchProductCatalogsByName(name));
     }
 
     @PostMapping()
     public ResponseEntity<?> createNewProductCatalog(@RequestBody ProductCatalogRequestEntity dto) {
-        return ResponseEntity.ok().body(catalogService.createNewProductCatalog(dto));
+        return controllerWrapper(() -> catalogService.createNewProductCatalog(dto));
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingProductCatalog(@PathVariable String id,
                                              @RequestBody ProductCatalogRequestEntity dto) {
-        return ResponseEntity.ok().body(catalogService.updateExistingProductCatalog(id, dto));
+        return controllerWrapper(() -> catalogService.updateExistingProductCatalog(id, dto));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteProductCatalogByID(@RequestParam String id) {
-        return ResponseEntity.ok().body(catalogService.deleteProductCatalogByID(id));
+        return controllerWrapper(() -> catalogService.deleteProductCatalogByID(id));
     }
 }

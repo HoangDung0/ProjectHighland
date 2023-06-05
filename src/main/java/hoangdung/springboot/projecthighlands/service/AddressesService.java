@@ -17,7 +17,7 @@ public class AddressesService {
     private static AddressesRepository addressesRepository;
 
     private static UserRepository userRepository;
-//
+
 //    public static ObjectMapper objectMapper = new ObjectMapper();
 //
 //    public static List<AddressesDto> convertListAddressesIDToListAddresses(String listAddressesID) throws JsonProcessingException {
@@ -40,14 +40,6 @@ public class AddressesService {
     }
 
     public List<AddressesResponseEntity> getAllAddressesByUserID(String id) {
-//        String listAddressesID = addressesRepository.getListAddressesID(id);
-//        List<AddressesDto> listAddressesDto = addressesRepository.getListAddressesByUserID(id);
-//        List<AddressesResponseEntity> listAddressesResponseEntity = new ArrayList<>();
-//        for (AddressesDto addressDto : listAddressesDto) {
-//           listAddressesResponseEntity.add(AddressesResponseEntity.fromAddressesDto(addressDto));
-//        }
-//        return listAddressesResponseEntity;
-
         return addressesRepository.getListAddressesByUserID(id)
                 .stream()
                 .map(AddressesResponseEntity::fromAddressesDto)
