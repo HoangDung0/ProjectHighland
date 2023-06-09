@@ -113,13 +113,6 @@ public class OrderService {
     }
 
 
-//    public List<OrderItemResponseEntity> getOrderItemByOrderID(String id) {
-//        return orderItemRepository.getOrderItemByOrderID(id)
-//                .stream()
-//                .map(OrderItemResponseEntity::fromOrderItemDto)
-//                .toList();
-//    }
-
     public OrderResponseEntity getOrderByID(String id) {
         return OrderResponseEntity.fromOrderDto(orderRepository.findById(id).orElseThrow());
     }
