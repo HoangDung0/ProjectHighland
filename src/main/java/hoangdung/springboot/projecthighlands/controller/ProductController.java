@@ -1,6 +1,5 @@
 package hoangdung.springboot.projecthighlands.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import hoangdung.springboot.projecthighlands.model.request.ProductRequestEntity;
 import hoangdung.springboot.projecthighlands.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -17,103 +16,76 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 public class ProductController {
 
     public static ProductService productService;
-//    @GetMapping
-//    private ResponseEntity<?> getAllProduct() {
-//        return controllerWrapper(productService::getAllProduct);
-//    }
 
-//    @GetMapping
-//    private ResponseEntity<?> getProductByName(@RequestParam String name) {
-//        return controllerWrapper(() -> productService.getProductByName(name));
-//    }
+    @GetMapping
+    private ResponseEntity<?> getAllProduct() {
+        return controllerWrapper(productService::getAllProduct);
+    }
+
+    @GetMapping
+    private ResponseEntity<?> searchProductByProductName(@RequestParam String name) {
+        return controllerWrapper(() -> productService.searchProductByProductName(name));
+    }
 
     @GetMapping("/{id}")
     private ResponseEntity<?> getProductByID(@PathVariable String id) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.getProductByID(id);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> productService.getProductByID(id));
     }
 
 
     @PostMapping()
-    public ResponseEntity<?> createNewProduct(@RequestBody ProductRequestEntity dto) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.createNewProduct(dto);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public ResponseEntity<?> createNewProduct(@RequestBody ProductRequestEntity entity) {
+        return controllerWrapper(() ->productService.createNewProduct(entity));
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingProductCatalog(@PathVariable String id,
-                                                           @RequestBody ProductRequestEntity dto) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.updateExistingProduct(id, dto);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                                                           @RequestBody ProductRequestEntity entity) {
+        return controllerWrapper(() -> productService.updateExistingProduct(id, entity));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteProductCatalogByID(@RequestParam String id) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.deleteProductByID(id);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> productService.deleteProductByID(id));
     }
 
 
     //API CRUD Size Option
-    @PutMapping("/{id}/addsizeoption")
+    @PostMapping("/{id}/sizeoption")
     private ResponseEntity<?> addSizeOption(@PathVariable String id,
                                             @RequestParam String size,
                                             @RequestParam int price) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.addSizeOption(id, size, price);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> productService.addSizeOption(id, size, price));
     }
 
 
-    @PutMapping("/{id}/updatesizeoption")
+    @PutMapping("/{id}/sizeoption")
     private ResponseEntity<?> updateSizeOption(@PathVariable String id,
                                                @RequestParam String size,
                                                @RequestParam int newPrice) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.updateSizeOption(id, size, newPrice);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> productService.updateSizeOption(id, size, newPrice));
     }
 
-    @PutMapping("/{id}/deletesizeoption")
+    @DeleteMapping("/{id}/sizeoption")
     private ResponseEntity<?> deleteSizeOption(@PathVariable String id,
                                                @RequestParam String size) {
-        return controllerWrapper(() -> {
-            try {
-                return productService.deleteSizeOption(id, size);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> productService.deleteSizeOption(id, size));
     }
 
 
+    //API CRUD Tag
+    @PostMapping("/{id}/tag")
+    private ResponseEntity<?> addTag(@PathVariable String id,
+                                     @RequestParam String productID,
+                                     @RequestParam String tagID){
+        return controllerWrapper(() -> productService.addTag(productID,tagID));
+    }
+
+    @DeleteMapping("/{id}/tag")
+    private ResponseEntity<?> deleteTag(@PathVariable String id,
+                                     @RequestParam String productID,
+                                     @RequestParam String tagID){
+        return controllerWrapper(() -> productService.deleteTag(productID,tagID));
+    }
 }
 

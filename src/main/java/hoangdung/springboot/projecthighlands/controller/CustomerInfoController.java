@@ -1,6 +1,5 @@
 package hoangdung.springboot.projecthighlands.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import hoangdung.springboot.projecthighlands.model.request.CustomerInfoRequestEntity;
 import hoangdung.springboot.projecthighlands.service.CustomerInfoService;
 import lombok.RequiredArgsConstructor;
@@ -27,46 +26,22 @@ public class CustomerInfoController {
 
     @PostMapping()
     public ResponseEntity<?> createNewCustomerInfo(@RequestBody CustomerInfoRequestEntity entity) {
-        return controllerWrapper(() -> {
-            try {
-                return customerInfoService.createNewCustomerInfo(entity);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> customerInfoService.createNewCustomerInfo(entity));
     }
 
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingCustomerInfo(@PathVariable String id,
                                                          @RequestBody CustomerInfoRequestEntity entity) {
-        return controllerWrapper(() -> {
-            try {
-                return customerInfoService.updateExistingCustomerInfo(id, entity);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> customerInfoService.updateExistingCustomerInfo(id, entity));
     }
 
     @PutMapping("/usedcoupon/{id}")
     private ResponseEntity<?> searchCouponByCouponName(@RequestParam String usedCouponID, String id) {
-        return controllerWrapper(() -> {
-            try {
-                return customerInfoService.addUsedCoupon(usedCouponID, id);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> customerInfoService.addUsedCoupon(usedCouponID, id));
     }
 
     @DeleteMapping()
     private ResponseEntity<?> deleteCouponByID(@RequestParam String id) {
-        return controllerWrapper(() -> {
-            try {
-                return customerInfoService.deleteCustomerByID(id);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return controllerWrapper(() -> customerInfoService.deleteCustomerByID(id));
     }
 }

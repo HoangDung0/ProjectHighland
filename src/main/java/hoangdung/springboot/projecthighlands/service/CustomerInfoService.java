@@ -1,7 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hoangdung.springboot.projecthighlands.model.dto.CustomerInfoDto;
 import hoangdung.springboot.projecthighlands.model.request.CustomerInfoRequestEntity;
@@ -36,7 +35,8 @@ public class CustomerInfoService {
                 .toList();
     }
 
-    public String convertListUsedCouponsToListUsedCouponID(List<CouponResponseEntity> listUsedCoupons) throws JsonProcessingException {
+    @SneakyThrows
+    public String convertListUsedCouponsToListUsedCouponID(List<CouponResponseEntity> listUsedCoupons) {
         List<String> listUsedCouponID = listUsedCoupons
                 .stream()
                 .map(CouponResponseEntity::getCouponID)
@@ -46,7 +46,7 @@ public class CustomerInfoService {
 
 
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
-    public CustomerInfoResponseEntity createNewCustomerInfo(CustomerInfoRequestEntity entity) throws JsonProcessingException {
+    public CustomerInfoResponseEntity createNewCustomerInfo(CustomerInfoRequestEntity entity){
         CustomerInfoDto preparedCustomerInfo = CustomerInfoDto.builder()
                 .point(entity.getPoint())
                 .rank(entity.getRank())
@@ -59,7 +59,7 @@ public class CustomerInfoService {
 
     }
 
-    public CustomerInfoResponseEntity updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) throws JsonProcessingException {
+    public CustomerInfoResponseEntity updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) {
         CustomerInfoDto loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
 
         loadedCustomerInfo.setPoint(entity.getPoint());
@@ -71,25 +71,25 @@ public class CustomerInfoService {
     }
 
 
-    public CustomerInfoResponseEntity deleteCustomerByID(String id) throws JsonProcessingException {
+    public CustomerInfoResponseEntity deleteCustomerByID(String id) {
         CustomerInfoDto loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
         customerInfoRepository.deleteById(id);
         return CustomerInfoResponseEntity.fromCustomerInfoDto(loadedCustomerInfo);
     }
 
-    public CustomerInfoResponseEntity getCustomerByUserID(String userID)  {
+    public CustomerInfoResponseEntity getCustomerByUserID(String userID) {
         return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.getCustomerInfoByUserID(userID));
     }
 
-    public CustomerInfoResponseEntity addUsedCoupon(String usedCouponID, String customerID) throws JsonProcessingException {
-       CouponResponseEntity entityUsedCoupon = CouponResponseEntity.fromCouponDto(couponRepository.findById(usedCouponID).orElseThrow());
-       CustomerInfoDto dtoCustomerInfo = customerInfoRepository.findById(customerID).orElseThrow();
+    public CustomerInfoResponseEntity addUsedCoupon(String usedCouponID, String customerID) {
+        CouponResponseEntity entityUsedCoupon = CouponResponseEntity.fromCouponDto(couponRepository.findById(usedCouponID).orElseThrow());
+        CustomerInfoDto dtoCustomerInfo = customerInfoRepository.findById(customerID).orElseThrow();
 
-       List<CouponResponseEntity> listUsedCoupon = convertListUsedCouponIDToListUsedCoupons(dtoCustomerInfo.getUsedCouponJsonString());
-       listUsedCoupon.add(entityUsedCoupon);
-       dtoCustomerInfo.setUsedCouponJsonString(convertListUsedCouponsToListUsedCouponID(listUsedCoupon));
+        List<CouponResponseEntity> listUsedCoupon = convertListUsedCouponIDToListUsedCoupons(dtoCustomerInfo.getUsedCouponJsonString());
+        listUsedCoupon.add(entityUsedCoupon);
+        dtoCustomerInfo.setUsedCouponJsonString(convertListUsedCouponsToListUsedCouponID(listUsedCoupon));
 
-       return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.save(dtoCustomerInfo));
+        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.save(dtoCustomerInfo));
     }
 
 }

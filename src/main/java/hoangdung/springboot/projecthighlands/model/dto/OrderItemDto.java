@@ -12,23 +12,29 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tbl_customerinfo")
-public class CustomerInfoDto {
+@Table(name = "tbl_orderitem")
+public class OrderItemDto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String customerID;
+    private String oderItemID;
 
-    private int point;
+    private int quantity;
 
-    private int rank;
+    private String listToppingJsonString;
 
-    private String usedCouponJsonString;
+    private String sizeJsonString;
 
-    private String cardInfo;
+    private float price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "orderID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private UserDto userDto;
+    private OrderDto orderDto;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productID")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private ProductDto productDto;
+
 }

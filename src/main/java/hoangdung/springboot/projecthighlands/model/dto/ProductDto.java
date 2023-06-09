@@ -32,7 +32,7 @@ public class ProductDto {
     private String tagJsonString;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productCatalogDto")
+    @JoinColumn(name = "productCatalogID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private ProductCatalogDto productCatalogDto;
 

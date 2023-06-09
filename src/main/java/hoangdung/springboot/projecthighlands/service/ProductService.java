@@ -1,6 +1,5 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hoangdung.springboot.projecthighlands.model.dto.ProductDto;
 import hoangdung.springboot.projecthighlands.model.request.ProductRequestEntity;
@@ -30,7 +29,7 @@ public class ProductService {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     @SneakyThrows
-    public static List<TagResponseEntity> convertListTagIDToListTag(String listTagID){
+    public static List<TagResponseEntity> convertListTagIDToListTag(String listTagID) {
         return (List<TagResponseEntity>) objectMapper.readValue(listTagID, List.class)
                 .stream()
                 .map(s -> tagRepository.findById(s.toString()).orElseThrow())
@@ -45,18 +44,19 @@ public class ProductService {
                 .toList();
         return objectMapper.writeValueAsString(listTagID);
     }
+
     @SneakyThrows
-    public static Map<String, Integer> convertSizeOptionStringToMap(String sizeOptionJsonString){
+    public static Map<String, Integer> convertSizeOptionStringToMap(String sizeOptionJsonString) {
         return objectMapper.readValue(sizeOptionJsonString, HashMap.class);
     }
+
     @SneakyThrows
     public static String convertSizeOptionMapToString(Map<String, Integer> sizeOption) {
         return objectMapper.writeValueAsString(sizeOption);
     }
 
 
-
-    public ProductResponseEntity createNewProduct(ProductRequestEntity entity) throws JsonProcessingException {
+    public ProductResponseEntity createNewProduct(ProductRequestEntity entity) {
         ProductDto preparedProduct = ProductDto.builder()
                 .productName(entity.getProductName())
                 .description(entity.getDescription())
@@ -71,7 +71,7 @@ public class ProductService {
 
     }
 
-    public ProductResponseEntity updateExistingProduct(String id, ProductRequestEntity entity) throws JsonProcessingException {
+    public ProductResponseEntity updateExistingProduct(String id, ProductRequestEntity entity) {
         ProductDto loadedProduct = productRepository.findById(id).orElseThrow();
 
         loadedProduct.setProductName(entity.getProductName());
@@ -84,33 +84,33 @@ public class ProductService {
     }
 
 
-    public ProductResponseEntity deleteProductByID(String id) throws JsonProcessingException {
+    public ProductResponseEntity deleteProductByID(String id) {
         ProductDto loadedProduct = productRepository.findById(id).orElseThrow();
         productRepository.deleteById(id);
         return ProductResponseEntity.fromProductDto(loadedProduct);
     }
 
 
-    public List<ProductResponseEntity> searchProductByProductName(String name) throws JsonProcessingException {
+    public List<ProductResponseEntity> searchProductByProductName(String name) {
         return productRepository.searchProductByProductName(name)
                 .stream()
                 .map(ProductResponseEntity::fromProductDto)
                 .toList();
     }
 
-    public List<ProductResponseEntity> getAllProduct(){
+    public List<ProductResponseEntity> getAllProduct() {
         return productRepository.findAll()
                 .stream().map(ProductResponseEntity::fromProductDto)
                 .toList();
     }
 
-    public ProductResponseEntity getProductByID(String id) throws JsonProcessingException {
+    public ProductResponseEntity getProductByID(String id) {
         return ProductResponseEntity.fromProductDto(productRepository.findById(id).orElseThrow());
     }
 
 
     //CRUD của Size Option
-    public ProductResponseEntity addSizeOption(String productID, String size, int price) throws JsonProcessingException {
+    public ProductResponseEntity addSizeOption(String productID, String size, int price) {
         ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.put(size, price);
@@ -119,7 +119,7 @@ public class ProductService {
         return ProductResponseEntity.fromProductDto(loadedProduct);
     }
 
-    public ProductResponseEntity updateSizeOption(String productID, String size, int newPrice) throws JsonProcessingException {
+    public ProductResponseEntity updateSizeOption(String productID, String size, int newPrice) {
         ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.replace(size, newPrice);
@@ -128,7 +128,7 @@ public class ProductService {
         return ProductResponseEntity.fromProductDto(loadedProduct);
     }
 
-    public ProductResponseEntity deleteSizeOption(String productID, String size) throws JsonProcessingException {
+    public ProductResponseEntity deleteSizeOption(String productID, String size) {
         ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.remove(size);
@@ -138,6 +138,29 @@ public class ProductService {
     }
 
     //CRUD của Tag ID
+    public ProductResponseEntity addTag(String productID, String tagID) {
+        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
+        listTag.add(TagResponseEntity.fromTagDto(tagRepository.findById(tagID).orElseThrow()));
+        loadedProduct.setTagJsonString(convertListTagToListTagID(listTag));
+        return ProductResponseEntity.fromProductDto(loadedProduct);
+    }
 
+    public ProductResponseEntity deleteTag(String productID, String tagID) {
+        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
+        int temp = 0;
+        boolean flag = false;
+        for (int i = 0; i < listTag.size() - 1; i++) {
+            if (tagID == listTag.get(i).getTagID()) {
+                temp = i;
+                flag = true;
+            }
+        }
+        if (flag)
+            listTag.remove(temp);
+        loadedProduct.setTagJsonString(convertListTagToListTagID(listTag));
+        return ProductResponseEntity.fromProductDto(loadedProduct);
+    }
 
 }

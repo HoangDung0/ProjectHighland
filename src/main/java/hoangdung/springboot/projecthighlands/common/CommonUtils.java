@@ -25,7 +25,7 @@ public class CommonUtils {
 
     public static ResponseEntity<?> switchException(Exception e) {
 
-        var mappings = (Map<Class<? extends RuntimeException>, Supplier<? extends Object>>) Map.of(
+        var mappings = (Map<Class<? extends Exception>, Supplier<? extends Object>>) Map.of(
                 NullPointerException.class, (Supplier<?>) ResponseEntity::notFound,
                 IllegalArgumentException.class, (Supplier<?>) ResponseEntity::badRequest,
                 NoSuchElementException.class, (Supplier<?>) ResponseEntity::notFound,
