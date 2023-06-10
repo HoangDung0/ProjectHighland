@@ -22,7 +22,7 @@ public class ProductController {
         return controllerWrapper(productService::getAllProduct);
     }
 
-    @GetMapping
+    @GetMapping("/search")
     private ResponseEntity<?> searchProductByProductName(@RequestParam String name) {
         return controllerWrapper(() -> productService.searchProductByProductName(name));
     }
