@@ -18,7 +18,7 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 @RestController
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -74,7 +74,7 @@ public class UserController {
     // Addresses Controller
 
     @GetMapping("/{id}/adrresses/{addressID}")
-    private ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id,
+    private ResponseEntity<?> getAddressesById(@PathVariable String id,
                                                    @PathVariable String addressID){
         return controllerWrapper(() -> addressesService.getAddressesById(addressID));
 //        return ResponseEntity.ok().body(addressesService.getAddressesById(addressID));
@@ -98,9 +98,9 @@ public class UserController {
         return controllerWrapper(() -> addressesService.updateExistingAddresses(addressID, requestEntity));
     }
 
-    @DeleteMapping("/{id}/addresses")
+    @DeleteMapping("/{id}/addresses/{addressID}")
     private ResponseEntity<?> deleteAddressesByID(@PathVariable String id,
-                                               @RequestParam String addressID) {
+                                               @PathVariable String addressID) {
         return controllerWrapper(() -> addressesService.deleteAddressesByID(addressID));
     }
 

@@ -21,12 +21,12 @@ public class CouponController {
     // adjust endpoints
     // apply controllerWrapper (rewrite)
 
-    @GetMapping("/{name}")
-    private ResponseEntity<?> getCouponByCouponCode(@PathVariable String name) {
-        return controllerWrapper(() -> couponService.getCouponByCouponCode(name));
+    @GetMapping("/{code}")
+    private ResponseEntity<?> getCouponByCouponCode(@PathVariable String code) {
+        return controllerWrapper(() -> couponService.getCouponByCouponCode(code));
     }
 
-    @GetMapping()
+    @GetMapping("/search")
     private ResponseEntity<?> searchCouponByCouponName(@RequestParam String name) {
         return controllerWrapper(() -> couponService.searchCouponByCouponName(name));
     }
@@ -42,8 +42,8 @@ public class CouponController {
         return controllerWrapper(() -> couponService.updateExistingCoupon(id, entity));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteCouponByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteCouponByID(@PathVariable String id) {
         return controllerWrapper(() -> couponService.deleteCouponByID(id));
     }
 }

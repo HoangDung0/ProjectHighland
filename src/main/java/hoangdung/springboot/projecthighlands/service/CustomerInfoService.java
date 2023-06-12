@@ -81,6 +81,10 @@ public class CustomerInfoService {
         return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.getCustomerInfoByUserID(userID));
     }
 
+    public CustomerInfoResponseEntity getCustomerByID(String id){
+        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.findById(id).orElseThrow());
+    }
+
     public CustomerInfoResponseEntity addUsedCoupon(String usedCouponID, String customerID) {
         CouponResponseEntity entityUsedCoupon = CouponResponseEntity.fromCouponDto(couponRepository.findById(usedCouponID).orElseThrow());
         CustomerInfoDto dtoCustomerInfo = customerInfoRepository.findById(customerID).orElseThrow();

@@ -43,8 +43,8 @@ public class ProductCatalogController {
         return controllerWrapper(() -> catalogService.updateExistingProductCatalog(id, dto));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteProductCatalogByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteProductCatalogByID(@PathVariable String id) {
         return controllerWrapper(() -> catalogService.deleteProductCatalogByID(id));
     }
 }

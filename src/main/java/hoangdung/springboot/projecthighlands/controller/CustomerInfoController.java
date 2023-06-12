@@ -23,6 +23,11 @@ public class CustomerInfoController {
         return controllerWrapper(() -> customerInfoService.getCustomerByUserID(userid));
     }
 
+    @GetMapping("/{id}")
+    private ResponseEntity<?> getCustomerByID(@PathVariable String id){
+        return controllerWrapper(() -> customerInfoService.getCustomerByID(id));
+    }
+
 
     @PostMapping()
     public ResponseEntity<?> createNewCustomerInfo(@RequestBody CustomerInfoRequestEntity entity) {
@@ -36,12 +41,12 @@ public class CustomerInfoController {
     }
 
     @PutMapping("/usedcoupon/{id}")
-    private ResponseEntity<?> searchCouponByCouponName(@RequestParam String usedCouponID, String id) {
+    private ResponseEntity<?> addUsedCoupon(@RequestParam String usedCouponID, String id) {
         return controllerWrapper(() -> customerInfoService.addUsedCoupon(usedCouponID, id));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteCouponByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteCustomerByID(@PathVariable String id) {
         return controllerWrapper(() -> customerInfoService.deleteCustomerByID(id));
     }
 }

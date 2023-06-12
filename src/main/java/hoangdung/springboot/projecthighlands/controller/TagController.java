@@ -42,8 +42,8 @@ public class TagController {
         return controllerWrapper(() -> tagService.updateExistingTag(id, dto));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteTagByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteTagByID(@PathVariable String id) {
         return controllerWrapper(() -> tagService.deleteTagByID(id));
     }
 }

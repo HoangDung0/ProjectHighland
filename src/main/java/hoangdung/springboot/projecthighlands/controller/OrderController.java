@@ -18,6 +18,11 @@ public class OrderController {
     public static OrderService orderService;
 
 
+    @GetMapping
+    private ResponseEntity<?> getAllOrders(){
+        return controllerWrapper(orderService::getAllOrder);
+    }
+
     @GetMapping("/{id}")
     private ResponseEntity<?> getOrderByID(@RequestParam String orderID) {
         return controllerWrapper(() -> orderService.getOrderByID(orderID));
@@ -35,8 +40,8 @@ public class OrderController {
         return controllerWrapper(() -> orderService.updateExistingOrder(id, entity));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteOrderByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteOrderByID(@PathVariable String id) {
         return controllerWrapper(() -> orderService.deleteOrderByID(id));
     }
 }

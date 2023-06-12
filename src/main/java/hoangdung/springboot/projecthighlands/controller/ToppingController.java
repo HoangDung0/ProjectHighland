@@ -12,12 +12,10 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 @RestController
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/topping")
+@RequestMapping("/toppings")
 public class ToppingController {
 
     private final ToppingService toppingService;
-
-    public ToppingRequestEntity toppingRequestEntity;
 
 
     @GetMapping
@@ -25,8 +23,8 @@ public class ToppingController {
         return controllerWrapper(toppingService::getAllToppings);
     }
 
-    @GetMapping("/id")
-    private ResponseEntity<?> getToppingById(@RequestParam String id){
+    @GetMapping("/{id}")
+    private ResponseEntity<?> getToppingById(@PathVariable String id){
         return controllerWrapper(() -> toppingService.getToppingById(id));
     }
 
@@ -35,7 +33,7 @@ public class ToppingController {
         return controllerWrapper(() -> toppingService.searchToppingsByName(name));
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<?> createNewUser(@RequestBody ToppingRequestEntity dto) {
         return controllerWrapper(() -> toppingService.createNewTopping(dto));
     }
@@ -46,8 +44,8 @@ public class ToppingController {
         return controllerWrapper(() -> toppingService.updateExistingTopping(id, dto));
     }
 
-    @DeleteMapping()
-    private ResponseEntity<?> deleteToppingByID(@RequestParam String id) {
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deleteToppingByID(@PathVariable String id) {
         return controllerWrapper(() -> toppingService.deleteToppingByID(id));
     }
 }

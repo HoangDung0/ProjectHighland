@@ -1,6 +1,5 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import hoangdung.springboot.projecthighlands.model.dto.CouponDto;
 import hoangdung.springboot.projecthighlands.model.dto.OrderDto;
 import hoangdung.springboot.projecthighlands.model.dto.OrderItemDto;
@@ -40,7 +39,7 @@ public class OrderService {
         List<OrderDto> listOrderUsedCoupon = orderRepository.getOrderByUserIDAndCouponCode(id, entity.getCouponCode());
         if(!listOrderUsedCoupon.isEmpty()){
             //nếu coupon đã và đang sử dụng trong order khác thì ném lỗi
-            throw new DuplicateRequestException();
+            throw new Exception();
         }else{
             //tính giảm giá = coupon
             CouponDto couponDto = couponRepository.getCouponByCouponCode(entity.getCouponCode());
@@ -115,6 +114,12 @@ public class OrderService {
 
     public OrderResponseEntity getOrderByID(String id) {
         return OrderResponseEntity.fromOrderDto(orderRepository.findById(id).orElseThrow());
+    }
+
+    public List<OrderResponseEntity> getAllOrder(){
+        return orderRepository.findAll().stream()
+                .map(OrderResponseEntity::fromOrderDto)
+                .toList();
     }
 
 }
