@@ -1,12 +1,12 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import hoangdung.springboot.projecthighlands.model.dto.AddressesDto;
-import hoangdung.springboot.projecthighlands.model.request.AddressesRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.AddressesResponseEntity;
-import hoangdung.springboot.projecthighlands.repository.AddressesRepository;
-import hoangdung.springboot.projecthighlands.repository.UserRepository;
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
 import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.model.dto.AddressesDto;
+import hoangdung.springboot.projecthighlands.model.request.AddressesRequestEntity;
+import hoangdung.springboot.projecthighlands.repository.AddressesRepository;
+import hoangdung.springboot.projecthighlands.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +16,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressesService {
 
-    private static AddressesRepository addressesRepository;
+    private final AddressesRepository addressesRepository;
 
-    private static UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @TranferToResponseEntity
     public Tranformable getAddressesById(String id) {
         return addressesRepository.findById(id).orElseThrow();
     }
 
-    public List<AddressesResponseEntity> getAllAddressesByUserID(String id) {
-        return addressesRepository.getListAddressesByUserID(id)
-                .stream()
-                .map(AddressesResponseEntity::fromAddressesDto)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<Tranformable> getAllAddressesByUserID(String id) {
+//        return addressesRepository.getListAddressesByUserID(id)
+//                .stream()
+//                .map(AddressesResponseEntity::fromAddressesDto)
+//                .toList();
+        return addressesRepository.getListAddressesByUserID(id);
+
     }
 
     @TranferToResponseEntity

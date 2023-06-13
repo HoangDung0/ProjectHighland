@@ -35,7 +35,7 @@ public class OrderItemService {
 
     @SneakyThrows
     public static Map<String, Integer> convertSizeStringToMap(String sizeJsonString) {
-        return objectMapper.readValue(sizeJsonString, HashMap.class);
+        return objectMapper.readValue(sizeJsonString, Map.class);
     }
 
     @SneakyThrows
@@ -53,7 +53,7 @@ public class OrderItemService {
         return objectMapper.writeValueAsString(listTopping);
     }
 
-    public float pricePerOrderItem (OrderItemRequestEntity entity) {
+    public float pricePerOrderItem(OrderItemRequestEntity entity) {
         Map<String, Integer> listTopping = entity.getListTopping();
         Map<String, Integer> size = entity.getSize();
 
@@ -61,6 +61,7 @@ public class OrderItemService {
         float priceProduct = productRepository.findById(entity.getProductID()).orElseThrow().getPrice();
 
         //Giá khi topping
+        //viết reduce
         float priceTopping = 0;
         Set<String> listToppingID = listTopping.keySet();
         for (String s : listToppingID) {
@@ -69,13 +70,14 @@ public class OrderItemService {
         }
 
         //Giá nâng size
+        //reduce
         float priceSize = 0;
         Set<String> listSize = size.keySet();
         for (String s : listSize) {
             priceSize = priceSize + (float) size.get(s);
         }
 
-        return priceProduct + priceTopping + priceSize;
+        return (priceProduct + priceTopping + priceSize) * entity.getQuantity();
 
     }
 
@@ -99,7 +101,7 @@ public class OrderItemService {
         loadedOrderItem.setQuantity(entity.getQuantity());
         loadedOrderItem.setListToppingJsonString(convertListToppingMapToString(entity.getListTopping()));
         loadedOrderItem.setSizeJsonString(convertSizeMapToString(entity.getSize()));
-        loadedOrderItem.setPrice(pricePerOrderItem(entity) );
+        loadedOrderItem.setPrice(pricePerOrderItem(entity));
 
         return orderItemRepository.save(loadedOrderItem);
     }
@@ -118,6 +120,7 @@ public class OrderItemService {
                 .map(OrderItemResponseEntity::fromOrderItemDto)
                 .toList();
     }
+
     @TranferToResponseEntity
     public Tranformable getOrderItemByID(String id) {
         return orderItemRepository.findById(id).orElseThrow();

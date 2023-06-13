@@ -11,7 +11,7 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/coupon")
+@RequestMapping("/coupons")
 public class CouponController {
 
     private final CouponService couponService;

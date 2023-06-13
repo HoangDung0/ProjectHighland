@@ -153,16 +153,9 @@ public class ProductService {
     public Tranformable deleteTag(String productID, String tagID) {
         ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
         List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
-        int temp = 0;
-        boolean flag = false;
-        for (int i = 0; i < listTag.size() - 1; i++) {
-            if (tagID == listTag.get(i).getTagID()) {
-                temp = i;
-                flag = true;
-            }
-        }
-        if (flag)
-            listTag.remove(temp);
+        listTag.stream()
+                .filter(tagEntity -> tagEntity.getTagID().equalsIgnoreCase(tagID))
+                .forEach(listTag::remove);
         loadedProduct.setTagJsonString(convertListTagToListTagID(listTag));
 
         return loadedProduct;

@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Aspect
 @Configuration
 public class AopConfiguration {
@@ -28,17 +30,34 @@ public class AopConfiguration {
             return ProductCatalogResponseEntity.fromProductCatalogDto(productCatalog);
         } else if (result instanceof OrderDto order) {
             return OrderResponseEntity.fromOrderDto(order);
-        }else if (result instanceof OrderItemDto orderItem) {
+        } else if (result instanceof OrderItemDto orderItem) {
             return OrderItemResponseEntity.fromOrderItemDto(orderItem);
-        }else if (result instanceof CustomerInfoDto customerInfo) {
+        } else if (result instanceof CustomerInfoDto customerInfo) {
             return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfo);
-        }else if (result instanceof AddressesDto addresses) {
+        } else if (result instanceof AddressesDto addresses) {
             return AddressesResponseEntity.fromAddressesDto(addresses);
-        }else if (result instanceof CouponDto coupon) {
+        } else if (result instanceof CouponDto coupon) {
             return CouponResponseEntity.fromCouponDto(coupon);
         } else {
             throw new RuntimeException("Unknown type");
         }
+
     }
+
+    @Around("@annotation(hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity)")
+    public List<Tranformable> multipleTransformFromDtoToResponseEntity(ProceedingJoinPoint joinPoint) throws Throwable {
+        var result = (List<Tranformable>) joinPoint.proceed();
+
+        return result.stream()
+                .map(e -> {
+                    if (e instanceof AddressesDto address) {
+                        return (Tranformable) AddressesResponseEntity.fromAddressesDto(address);
+                    }
+                    return null;
+                })
+                .toList();
+
+    }
+
 
 }

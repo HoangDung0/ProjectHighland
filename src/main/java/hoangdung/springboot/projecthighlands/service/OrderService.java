@@ -44,7 +44,7 @@ public class OrderService {
             throw new Exception();
         } else {
             //tính giảm giá = coupon
-            CouponDto couponDto = couponRepository.getCouponByCouponCode(entity.getCouponCode());
+            CouponDto couponDto = couponRepository.findCouponDtosByCouponCodeIsIgnoreCase(entity.getCouponCode());
             //Kiểm tra tổng hóa đơn có đủ để áp dụng coupon ko
             if (couponDto.getMinOrderAmount() > totalPrice) {
                 throw new Exception();
@@ -52,8 +52,11 @@ public class OrderService {
                 //Kiểm tra xem coupon giảm theo % hay giảm thẳng
                 if (couponDto.getDiscountAmount() != 0) {
                     //giảm thẳng thì trừ thẳng vào total
-                    totalPrice = totalPrice - couponDto.getDiscountAmount();
-                } else if (couponDto.getDiscountRate() != 0) {
+                    return totalPrice - couponDto.getDiscountAmount();
+                }
+
+                //viết theo dạng toán tử ba ngôi
+                if (couponDto.getDiscountRate() != 0) {
                     //giảm theo % thì kiểm tra xem số tiền giảm đó có cao hơn số tiền tối đa được giảm ko
                     if (totalPrice * (1 / couponDto.getDiscountRate()) > couponDto.getDiscountRateCapAmount()) {
                         //nếu số tiền giảm cao hơn số tối đa cho phép thì chỉ giảm số tiền tối đa
@@ -71,20 +74,7 @@ public class OrderService {
 
     @TranferToResponseEntity
     public Tranformable createNewOrder(OrderRequestEntity entity) {
-        return orderRepository.save(OrderDto.builder()
-                .createdDate(LocalDate.now())
-                .lastUpdateDate(LocalDate.now())
-                .address1(entity.getAddress1())
-                .address2(entity.getAddress2())
-                .address3(entity.getAddress3())
-                .address4(entity.getAddress4())
-                .pickUpStore(entity.getPickUpStore())
-                .totalPrice(0)
-                .orderStatus(OrderDto.OrderStatus.valueOf(entity.getOrderStatus()))
-                .paymentMethod(OrderDto.PaymentMethod.valueOf(entity.getPaymentMethod()))
-                .pickUpOption(OrderDto.PickUpOption.valueOf(entity.getPickUpOption()))
-                .userDto(userRepository.findById(entity.getUserID()).orElseThrow())
-                .build());
+        return orderRepository.save(OrderDto.builder().createdDate(LocalDate.now()).lastUpdateDate(LocalDate.now()).address1(entity.getAddress1()).address2(entity.getAddress2()).address3(entity.getAddress3()).address4(entity.getAddress4()).pickUpStore(entity.getPickUpStore()).totalPrice(0).orderStatus(OrderDto.OrderStatus.valueOf(entity.getOrderStatus())).paymentMethod(OrderDto.PaymentMethod.valueOf(entity.getPaymentMethod())).pickUpOption(OrderDto.PickUpOption.valueOf(entity.getPickUpOption())).userDto(userRepository.findById(entity.getUserID()).orElseThrow()).build());
     }
 
     @TranferToResponseEntity
@@ -118,9 +108,7 @@ public class OrderService {
     }
 
     public List<OrderResponseEntity> getAllOrder() {
-        return orderRepository.findAll().stream()
-                .map(OrderResponseEntity::fromOrderDto)
-                .toList();
+        return orderRepository.findAll().stream().map(OrderResponseEntity::fromOrderDto).toList();
     }
 
 }
