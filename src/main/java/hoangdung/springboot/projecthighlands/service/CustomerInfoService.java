@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hoangdung.springboot.projecthighlands.model.dto.CustomerInfoDto;
 import hoangdung.springboot.projecthighlands.model.request.CustomerInfoRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.CouponResponseEntity;
-import hoangdung.springboot.projecthighlands.model.response.CustomerInfoResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.CouponRepository;
 import hoangdung.springboot.projecthighlands.repository.CustomerInfoRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -44,22 +45,20 @@ public class CustomerInfoService {
         return objectMapper.writeValueAsString(listUsedCouponID);
     }
 
-
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
-    public CustomerInfoResponseEntity createNewCustomerInfo(CustomerInfoRequestEntity entity){
-        CustomerInfoDto preparedCustomerInfo = CustomerInfoDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewCustomerInfo(CustomerInfoRequestEntity entity){
+        return customerInfoRepository.save(CustomerInfoDto.builder()
                 .point(entity.getPoint())
                 .rank(entity.getRank())
                 .cardInfo(entity.getCardInfo())
                 .userDto(userRepository.findById(entity.getUserID()).orElseThrow())
                 .usedCouponJsonString(convertListUsedCouponsToListUsedCouponID(entity.getListUsedCoupons()))
-                .build();
-
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.save(preparedCustomerInfo));
-
+                .build());
     }
 
-    public CustomerInfoResponseEntity updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) {
+    @TranferToResponseEntity
+    public Tranformable updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) {
         CustomerInfoDto loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
 
         loadedCustomerInfo.setPoint(entity.getPoint());
@@ -67,25 +66,27 @@ public class CustomerInfoService {
         loadedCustomerInfo.setCardInfo(entity.getCardInfo());
         loadedCustomerInfo.setUsedCouponJsonString(convertListUsedCouponsToListUsedCouponID(entity.getListUsedCoupons()));
 
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.save(loadedCustomerInfo));
+        return customerInfoRepository.save(loadedCustomerInfo);
     }
 
-
-    public CustomerInfoResponseEntity deleteCustomerByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteCustomerByID(String id) {
         CustomerInfoDto loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
         customerInfoRepository.deleteById(id);
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(loadedCustomerInfo);
+        return loadedCustomerInfo;
+    }
+    @TranferToResponseEntity
+    public Tranformable getCustomerByUserID(String userID) {
+        return customerInfoRepository.getCustomerInfoByUserID(userID);
     }
 
-    public CustomerInfoResponseEntity getCustomerByUserID(String userID) {
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.getCustomerInfoByUserID(userID));
+    @TranferToResponseEntity
+    public Tranformable getCustomerByID(String id){
+        return customerInfoRepository.findById(id).orElseThrow();
     }
 
-    public CustomerInfoResponseEntity getCustomerByID(String id){
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.findById(id).orElseThrow());
-    }
-
-    public CustomerInfoResponseEntity addUsedCoupon(String usedCouponID, String customerID) {
+    @TranferToResponseEntity
+    public Tranformable addUsedCoupon(String usedCouponID, String customerID) {
         CouponResponseEntity entityUsedCoupon = CouponResponseEntity.fromCouponDto(couponRepository.findById(usedCouponID).orElseThrow());
         CustomerInfoDto dtoCustomerInfo = customerInfoRepository.findById(customerID).orElseThrow();
 
@@ -93,7 +94,7 @@ public class CustomerInfoService {
         listUsedCoupon.add(entityUsedCoupon);
         dtoCustomerInfo.setUsedCouponJsonString(convertListUsedCouponsToListUsedCouponID(listUsedCoupon));
 
-        return CustomerInfoResponseEntity.fromCustomerInfoDto(customerInfoRepository.save(dtoCustomerInfo));
+        return customerInfoRepository.save(dtoCustomerInfo);
     }
 
 }

@@ -27,6 +27,12 @@ dependencies {
 	implementation 'org.hibernate:hibernate-core:6.2.2.Final'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.3'
 	implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+	implementation 'org.springframework.boot:spring-boot-starter-aop:1.2.3.RELEASE'
+	implementation 'org.aspectj:aspectjweaver'
+	implementation 'io.springfox:springfox-swagger-ui:2.10.5'
+	implementation 'io.springfox:springfox-swagger2:2.10.5'
+
+
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

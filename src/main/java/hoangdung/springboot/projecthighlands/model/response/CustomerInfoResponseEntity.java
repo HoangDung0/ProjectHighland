@@ -2,6 +2,7 @@ package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dto.CustomerInfoDto;
 import hoangdung.springboot.projecthighlands.service.CustomerInfoService;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerInfoResponseEntity {
+public class CustomerInfoResponseEntity implements Tranformable {
 
     private String customerID;
 

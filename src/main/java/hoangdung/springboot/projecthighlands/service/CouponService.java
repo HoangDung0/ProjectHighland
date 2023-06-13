@@ -4,10 +4,11 @@ import hoangdung.springboot.projecthighlands.model.dto.CouponDto;
 import hoangdung.springboot.projecthighlands.model.request.CouponRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.CouponResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.CouponRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,27 +18,22 @@ public class CouponService {
     private final CouponRepository couponRepository;
 
 
-    public CouponResponseEntity getCouponByCouponCode(String code) {
-        return CouponResponseEntity.fromCouponDto(couponRepository.getCouponByCouponCode(code));
+    @TranferToResponseEntity
+    public Tranformable getCouponByCouponCode(String code) {
+        return couponRepository.getCouponByCouponCode(code);
     }
 
     public List<CouponResponseEntity> searchCouponByCouponName(String name) {
-        List<CouponDto> listCouponDto = couponRepository.findCouponsByCouponNameContainingIgnoreCase(name);
-
-        // đổi thành stream api và optional pattern
-        List<CouponResponseEntity> listCouponsReponse = new ArrayList<>();
-        for (CouponDto dto : listCouponDto ) {
-            listCouponsReponse.add( CouponResponseEntity.fromCouponDto(dto));
-        }
-
-        return listCouponsReponse;
-
+        return couponRepository.findCouponsByCouponNameContainingIgnoreCase(name).stream()
+                .map(CouponResponseEntity::fromCouponDto)
+                .toList();
     }
 
 
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
-    public CouponResponseEntity createNewCoupon(CouponRequestEntity entity) {
-        CouponDto preparedCoupon = CouponDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewCoupon(CouponRequestEntity entity) {
+        return couponRepository.save(CouponDto.builder()
                 .couponName(entity.getCouponName())
                 .expirationDate(entity.getExpirationDate())
                 .couponCode(entity.getCouponCode())
@@ -47,13 +43,11 @@ public class CouponService {
                 .discountAmount(entity.getDiscountAmount())
                 .discountRateCapAmount(entity.getDiscountRateCapAmount())
                 .minOrderAmount(entity.getMinOrderAmount())
-                .build();
-
-        return CouponResponseEntity.fromCouponDto(couponRepository.save(preparedCoupon));
-
+                .build());
     }
 
-    public CouponResponseEntity updateExistingCoupon(String id, CouponRequestEntity entity){
+    @TranferToResponseEntity
+    public Tranformable updateExistingCoupon(String id, CouponRequestEntity entity) {
         CouponDto loadedCoupon = couponRepository.findById(id).orElseThrow();
 
         loadedCoupon.setCouponName(entity.getCouponName());
@@ -66,13 +60,13 @@ public class CouponService {
         loadedCoupon.setDiscountRateCapAmount(entity.getDiscountAmount());
         loadedCoupon.setMinOrderAmount(entity.getMinOrderAmount());
 
-        return CouponResponseEntity.fromCouponDto(couponRepository.save(loadedCoupon));
+        return couponRepository.save(loadedCoupon);
     }
 
-
-    public CouponResponseEntity deleteCouponByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteCouponByID(String id) {
         CouponDto loadedCoupon = couponRepository.findById(id).orElseThrow();
         couponRepository.deleteById(id);
-        return CouponResponseEntity.fromCouponDto(loadedCoupon);
+        return loadedCoupon;
     }
 }

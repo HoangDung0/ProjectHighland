@@ -1,13 +1,14 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dto.AddressesDto;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressesResponseEntity {
+public class AddressesResponseEntity implements Tranformable {
 
     private String addressID;
 

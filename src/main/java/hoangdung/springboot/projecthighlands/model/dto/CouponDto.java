@@ -1,5 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.dto;
 
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_coupon")
-public class CouponDto {
+public class CouponDto implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

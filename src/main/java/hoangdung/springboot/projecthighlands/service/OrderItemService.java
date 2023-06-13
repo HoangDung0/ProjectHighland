@@ -8,6 +8,8 @@ import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.ProductRepository;
 import hoangdung.springboot.projecthighlands.repository.ToppingRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -78,21 +80,20 @@ public class OrderItemService {
     }
 
 
-    public OrderItemResponseEntity createNewOrderItem(OrderItemRequestEntity entity) {
-        OrderItemDto preparedOrderItem = OrderItemDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewOrderItem(OrderItemRequestEntity entity) {
+        return orderItemRepository.save(OrderItemDto.builder()
                 .quantity(entity.getQuantity())
                 .listToppingJsonString(convertListToppingMapToString(entity.getListTopping()))
                 .price(pricePerOrderItem(entity))
                 .orderDto(orderRepository.findById(entity.getOrderID()).orElseThrow())
                 .productDto(productRepository.findById(entity.getProductID()).orElseThrow())
                 .sizeJsonString(convertSizeMapToString(entity.getSize()))
-                .build();
-
-        return OrderItemResponseEntity.fromOrderItemDto(orderItemRepository.save(preparedOrderItem));
-
+                .build());
     }
 
-    public OrderItemResponseEntity updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
+    @TranferToResponseEntity
+    public Tranformable updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
         OrderItemDto loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
 
         loadedOrderItem.setQuantity(entity.getQuantity());
@@ -100,14 +101,14 @@ public class OrderItemService {
         loadedOrderItem.setSizeJsonString(convertSizeMapToString(entity.getSize()));
         loadedOrderItem.setPrice(pricePerOrderItem(entity) );
 
-        return OrderItemResponseEntity.fromOrderItemDto(orderItemRepository.save(loadedOrderItem));
+        return orderItemRepository.save(loadedOrderItem);
     }
 
-
-    public OrderItemResponseEntity deleteOrderItemByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteOrderItemByID(String id) {
         OrderItemDto loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
         orderItemRepository.deleteById(id);
-        return OrderItemResponseEntity.fromOrderItemDto(loadedOrderItem);
+        return loadedOrderItem;
     }
 
 
@@ -117,9 +118,9 @@ public class OrderItemService {
                 .map(OrderItemResponseEntity::fromOrderItemDto)
                 .toList();
     }
-
-    public OrderItemResponseEntity getOrderItemByID(String id) {
-        return OrderItemResponseEntity.fromOrderItemDto(orderItemRepository.findById(id).orElseThrow());
+    @TranferToResponseEntity
+    public Tranformable getOrderItemByID(String id) {
+        return orderItemRepository.findById(id).orElseThrow();
     }
 
 }

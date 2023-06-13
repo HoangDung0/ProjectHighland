@@ -16,7 +16,7 @@ import java.util.List;
 import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
 
 @RestController
-@Controller
+@CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {

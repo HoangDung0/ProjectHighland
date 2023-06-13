@@ -1,6 +1,7 @@
 package hoangdung.springboot.projecthighlands.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_orderitem")
-public class OrderItemDto {
+public class OrderItemDto implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

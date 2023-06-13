@@ -4,13 +4,12 @@ import hoangdung.springboot.projecthighlands.model.request.OrderItemRequestEntit
 import hoangdung.springboot.projecthighlands.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
 
 @RestController
-@Controller
+@CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/orderitems")
 public class OrderItemController {

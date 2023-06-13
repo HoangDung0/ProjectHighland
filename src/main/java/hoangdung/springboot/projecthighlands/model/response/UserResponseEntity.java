@@ -1,6 +1,7 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dto.UserDto;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseEntity {
+public class UserResponseEntity implements Tranformable {
 
     private String userID;
 

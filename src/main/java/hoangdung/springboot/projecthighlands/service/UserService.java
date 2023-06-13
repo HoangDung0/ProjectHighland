@@ -4,45 +4,41 @@ import hoangdung.springboot.projecthighlands.model.dto.UserDto;
 import hoangdung.springboot.projecthighlands.model.request.UserRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.UserResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService  {
+public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<UserResponseEntity> getAllUsers() {
-        List<UserDto> listUserDto = userRepository.findAll();
-        List<UserResponseEntity> listUserResponse = new ArrayList<UserResponseEntity>();
-        for (UserDto dto : listUserDto ) {
-            listUserResponse.add( UserResponseEntity.fromUserDto(dto));
-        }
-        return listUserResponse;
+    @TranferToResponseEntity
+    public Tranformable getUserById(String id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
-    public UserResponseEntity getUserById(String id) {
-        return UserResponseEntity.fromUserDto(userRepository.findById(id).orElseThrow());
+    public List<UserResponseEntity> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserResponseEntity::fromUserDto)
+                .toList();
     }
+
 
     public List<UserResponseEntity> searchUsersByName(String name) {
-        List<UserDto> listUserDto = userRepository.findUsersByUserNameContainingIgnoreCase(name);
-
-        List<UserResponseEntity> listUserResponse = new ArrayList<UserResponseEntity>();
-        for (UserDto dto : listUserDto ) {
-            listUserResponse.add( UserResponseEntity.fromUserDto(dto));
-        }
-        return listUserResponse;
-
+        return userRepository.findUsersByUserNameContainingIgnoreCase(name).stream()
+                .map(UserResponseEntity::fromUserDto)
+                .toList();
     }
 
 
-    public UserResponseEntity createNewUser(UserRequestEntity dto) {
-        UserDto preparedUser = UserDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewUser(UserRequestEntity dto) {
+        return userRepository.save(UserDto.builder()
                 .userName(dto.getUserName())
                 .password(dto.getPassword())
                 .phone(dto.getPhone())
@@ -52,13 +48,11 @@ public class UserService  {
                 .sex(dto.isSex())
                 .createDate(dto.getCreateDate())
                 .activated(dto.isActivated())
-                .build();
-
-       return UserResponseEntity.fromUserDto(userRepository.save(preparedUser));
-
+                .build());
     }
 
-    public UserResponseEntity updateExistingUser(String id, UserRequestEntity dto) {
+    @TranferToResponseEntity
+    public Tranformable updateExistingUser(String id, UserRequestEntity dto) {
         UserDto loadedUser = userRepository.findById(id).orElseThrow();
 
         loadedUser.setUserName(dto.getUserName());
@@ -71,42 +65,24 @@ public class UserService  {
         loadedUser.setCreateDate(dto.getCreateDate());
         loadedUser.setActivated(dto.isActivated());
 
-        return UserResponseEntity.fromUserDto(userRepository.save(loadedUser));
+        return loadedUser;
     }
 
-
-    public UserResponseEntity updateUserRoleOfExistingUser(String id, String newRole){
-        UserDto preparedUser = userRepository.findById(id)
-                .map( loadedUser -> {
+    @TranferToResponseEntity
+    public Tranformable updateUserRoleOfExistingUser(String id, String newRole) {
+        return userRepository.findById(id)
+                .map(loadedUser -> {
                     loadedUser.setRole(UserDto.UserRole.valueOf(newRole));
                     return loadedUser;
                 }).orElseThrow();
-
-        return UserResponseEntity.fromUserDto(userRepository.save(preparedUser));
-
     }
 
-    public UserResponseEntity deleteUserByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteUserByID(String id) {
         UserDto loadedUser = userRepository.findById(id).orElseThrow();
         userRepository.deleteById(id);
-        return UserResponseEntity.fromUserDto(loadedUser);
+        return loadedUser;
     }
-
-//    public UserResponseEntity updateListAddressesUser(String id, UserRequestEntity dto, String listAddresses) throws JsonProcessingException{
-//        UserDto loadedUser = userRepository.findById(id).orElseThrow();
-//        loadedUser.setUserName(dto.getUserName());
-//        loadedUser.setPassword(dto.getPassword());
-//        loadedUser.setPhone(dto.getPhone());
-//        loadedUser.setEmail(dto.getEmail());
-//        loadedUser.setDayOfBirth(dto.getDayOfBirth());
-//        loadedUser.setRole(UserDto.UserRole.valueOf(dto.getRole()));
-//        loadedUser.setSex(dto.isSex());
-//        loadedUser.setCreateDate(dto.getCreateDate());
-//        loadedUser.setActivated(dto.isActivated());
-//
-//        return UserResponseEntity.fromUserDto(userRepository.save(loadedUser));
-//    }
-
 
 }
 

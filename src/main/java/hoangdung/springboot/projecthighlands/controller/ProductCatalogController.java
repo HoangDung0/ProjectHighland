@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
 
 @RestController
-@Controller
+@CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/productcatalogs")
 public class ProductCatalogController {

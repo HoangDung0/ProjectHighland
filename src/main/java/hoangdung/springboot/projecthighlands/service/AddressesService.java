@@ -5,6 +5,8 @@ import hoangdung.springboot.projecthighlands.model.request.AddressesRequestEntit
 import hoangdung.springboot.projecthighlands.model.response.AddressesResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.AddressesRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +20,9 @@ public class AddressesService {
 
     private static UserRepository userRepository;
 
-//    public static ObjectMapper objectMapper = new ObjectMapper();
-//
-//    public static List<AddressesDto> convertListAddressesIDToListAddresses(String listAddressesID) throws JsonProcessingException {
-//        return (List<AddressesDto>) objectMapper.readValue(listAddressesID, List.class)
-//                .stream()
-//                .map( s -> addressesRepository.findById(s.toString()))
-//                .toList();
-//    }
-//
-//    public String convertListAddressesToListAddressesID(List<AddressesDto> listAddressDto) throws JsonProcessingException {
-//        List<String> listAddressID = listAddressDto
-//                .stream()
-//                .map(AddressesDto::getAddressesID)
-//                .toList();
-//        return objectMapper.writeValueAsString(listAddressID);
-//    }
-
-    public AddressesResponseEntity getAddressesById(String id) {
-        return AddressesResponseEntity.fromAddressesDto(addressesRepository.findById(id).orElseThrow());
+    @TranferToResponseEntity
+    public Tranformable getAddressesById(String id) {
+        return addressesRepository.findById(id).orElseThrow();
     }
 
     public List<AddressesResponseEntity> getAllAddressesByUserID(String id) {
@@ -44,11 +30,11 @@ public class AddressesService {
                 .stream()
                 .map(AddressesResponseEntity::fromAddressesDto)
                 .toList();
-
     }
 
-    public AddressesResponseEntity createNewAddresses(String userID, AddressesRequestEntity requestEntity) {
-        AddressesDto preparedAddresses = AddressesDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewAddresses(String userID, AddressesRequestEntity requestEntity) {
+        return addressesRepository.save(AddressesDto.builder()
                 .addressesName(requestEntity.getAddressesName())
                 .address1(requestEntity.getAddress1())
                 .address2(requestEntity.getAddress2())
@@ -56,13 +42,11 @@ public class AddressesService {
                 .address4(requestEntity.getAddress4())
                 .phoneNumber(requestEntity.getPhoneNumber())
                 .userDto(userRepository.findById(requestEntity.getUserID()).orElseThrow())
-                .build();
-
-        return AddressesResponseEntity.fromAddressesDto(addressesRepository.save(preparedAddresses));
-
+                .build());
     }
 
-    public AddressesResponseEntity updateExistingAddresses(String id, AddressesRequestEntity requestEntity) {
+    @TranferToResponseEntity
+    public Tranformable updateExistingAddresses(String id, AddressesRequestEntity requestEntity) {
         AddressesDto loadedAddresses = addressesRepository.findById(id).orElseThrow();
 
         loadedAddresses.setAddressesName(requestEntity.getAddressesName());
@@ -73,12 +57,13 @@ public class AddressesService {
         loadedAddresses.setUserDto(userRepository.findById(requestEntity.getUserID()).orElseThrow());
         loadedAddresses.setPhoneNumber(requestEntity.getPhoneNumber());
 
-        return AddressesResponseEntity.fromAddressesDto(addressesRepository.save(loadedAddresses));
+        return addressesRepository.save(loadedAddresses);
     }
 
-    public AddressesResponseEntity deleteAddressesByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteAddressesByID(String id) {
         AddressesDto loadedAddresses = addressesRepository.findById(id).orElseThrow();
         addressesRepository.deleteById(id);
-        return AddressesResponseEntity.fromAddressesDto(loadedAddresses);
+        return loadedAddresses;
     }
 }

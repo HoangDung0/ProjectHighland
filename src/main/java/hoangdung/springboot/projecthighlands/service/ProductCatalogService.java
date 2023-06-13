@@ -4,10 +4,11 @@ import hoangdung.springboot.projecthighlands.model.dto.ProductCatalogDto;
 import hoangdung.springboot.projecthighlands.model.request.ProductCatalogRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.ProductCatalogResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ProductCatalogRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,58 +18,47 @@ public class ProductCatalogService {
     private final ProductCatalogRepository productCatalogRepository;
 
     public List<ProductCatalogResponseEntity> getAllProductCatalogs() {
-        List<ProductCatalogDto> listProductCatalogDto = productCatalogRepository.findAll();
-        List<ProductCatalogResponseEntity> listProductCatalogsResponse = new ArrayList<>();
-        for (ProductCatalogDto dto : listProductCatalogDto ) {
-            listProductCatalogsResponse.add( ProductCatalogResponseEntity.fromProductCatalogDto(dto));
-        }
-        return listProductCatalogsResponse;
+        return productCatalogRepository.findAll().stream()
+                .map(ProductCatalogResponseEntity::fromProductCatalogDto)
+                .toList();
     }
 
-    public ProductCatalogResponseEntity getProductCatalogById(String id) {
-        return ProductCatalogResponseEntity.fromProductCatalogDto(productCatalogRepository.findById(id).orElse(null));
+    @TranferToResponseEntity
+    public Tranformable getProductCatalogById(String id) {
+        return productCatalogRepository.findById(id).orElseThrow();
     }
 
     public List<ProductCatalogResponseEntity> searchProductCatalogsByName(String name) {
-        List<ProductCatalogDto> listProductCatalogDto =
-                productCatalogRepository.findProductCatalogByProductCatalogNameContainingIgnoreCase(name);
-
-        List<ProductCatalogResponseEntity> listProductCatalogResponse = new ArrayList<>();
-        for (ProductCatalogDto dto : listProductCatalogDto ) {
-            listProductCatalogResponse.add( ProductCatalogResponseEntity.fromProductCatalogDto(dto));
-        }
-        return listProductCatalogResponse;
-
+        return productCatalogRepository.findProductCatalogByProductCatalogNameContainingIgnoreCase(name).stream()
+                .map(ProductCatalogResponseEntity::fromProductCatalogDto)
+                .toList();
     }
 
-
-    public ProductCatalogResponseEntity createNewProductCatalog(ProductCatalogRequestEntity requestEntity) {
-        ProductCatalogDto preparedProductCatalog = ProductCatalogDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewProductCatalog(ProductCatalogRequestEntity requestEntity) {
+        return productCatalogRepository.save(ProductCatalogDto.builder()
                 .productCatalogName(requestEntity.getProductCatalogName())
                 .description(requestEntity.getDescription())
                 .thumbnailUrl(requestEntity.getThumbnailUrl())
-                .build();
-
-        return ProductCatalogResponseEntity.fromProductCatalogDto(productCatalogRepository.save(preparedProductCatalog));
-
+                .build());
     }
 
-    public ProductCatalogResponseEntity updateExistingProductCatalog(String id, ProductCatalogRequestEntity requestEntity){
+    @TranferToResponseEntity
+    public Tranformable updateExistingProductCatalog(String id, ProductCatalogRequestEntity requestEntity) {
         ProductCatalogDto loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
 
         loadedProductCatalog.setProductCatalogName(requestEntity.getProductCatalogName());
         loadedProductCatalog.setDescription(requestEntity.getDescription());
         loadedProductCatalog.setThumbnailUrl(requestEntity.getThumbnailUrl());
 
-        return ProductCatalogResponseEntity.fromProductCatalogDto(productCatalogRepository.save(loadedProductCatalog));
+        return productCatalogRepository.save(loadedProductCatalog);
     }
 
-
-
-    public ProductCatalogResponseEntity deleteProductCatalogByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteProductCatalogByID(String id) {
         ProductCatalogDto loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
         productCatalogRepository.deleteById(id);
-        return ProductCatalogResponseEntity.fromProductCatalogDto(loadedProductCatalog);
+        return loadedProductCatalog;
     }
 
 }

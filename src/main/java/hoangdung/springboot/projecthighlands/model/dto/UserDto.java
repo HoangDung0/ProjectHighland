@@ -1,5 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.dto;
 
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_user")
-public class UserDto {
+public class UserDto implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +31,7 @@ public class UserDto {
 
     private Date dayOfBirth;
 
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     private boolean sex;

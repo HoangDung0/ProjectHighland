@@ -8,6 +8,8 @@ import hoangdung.springboot.projecthighlands.model.response.OrderResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -37,26 +39,26 @@ public class OrderService {
         }
         //Kiểm tra xem coupon đã đc user sử dụng trong Order nào khác ch
         List<OrderDto> listOrderUsedCoupon = orderRepository.getOrderByUserIDAndCouponCode(id, entity.getCouponCode());
-        if(!listOrderUsedCoupon.isEmpty()){
+        if (!listOrderUsedCoupon.isEmpty()) {
             //nếu coupon đã và đang sử dụng trong order khác thì ném lỗi
             throw new Exception();
-        }else{
+        } else {
             //tính giảm giá = coupon
             CouponDto couponDto = couponRepository.getCouponByCouponCode(entity.getCouponCode());
             //Kiểm tra tổng hóa đơn có đủ để áp dụng coupon ko
-            if(couponDto.getMinOrderAmount() > totalPrice){
+            if (couponDto.getMinOrderAmount() > totalPrice) {
                 throw new Exception();
-            }else {
+            } else {
                 //Kiểm tra xem coupon giảm theo % hay giảm thẳng
-                if(couponDto.getDiscountAmount() != 0){
+                if (couponDto.getDiscountAmount() != 0) {
                     //giảm thẳng thì trừ thẳng vào total
                     totalPrice = totalPrice - couponDto.getDiscountAmount();
-                }else if(couponDto.getDiscountRate() != 0){
+                } else if (couponDto.getDiscountRate() != 0) {
                     //giảm theo % thì kiểm tra xem số tiền giảm đó có cao hơn số tiền tối đa được giảm ko
-                    if(totalPrice * (1 / couponDto.getDiscountRate()) > couponDto.getDiscountRateCapAmount()){
+                    if (totalPrice * (1 / couponDto.getDiscountRate()) > couponDto.getDiscountRateCapAmount()) {
                         //nếu số tiền giảm cao hơn số tối đa cho phép thì chỉ giảm số tiền tối đa
                         totalPrice = totalPrice - couponDto.getDiscountRateCapAmount();
-                    }else{
+                    } else {
                         //nếu số tiền giảm thấp hơn số tối đa cho phép thì trừ vào tiền giảm
                         totalPrice = totalPrice - (totalPrice * (1 / couponDto.getDiscountRate()));
                     }
@@ -67,9 +69,9 @@ public class OrderService {
     }
 
 
-
-    public OrderResponseEntity createNewOrder(OrderRequestEntity entity) {
-        OrderDto preparedOrder = OrderDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewOrder(OrderRequestEntity entity) {
+        return orderRepository.save(OrderDto.builder()
                 .createdDate(LocalDate.now())
                 .lastUpdateDate(LocalDate.now())
                 .address1(entity.getAddress1())
@@ -82,12 +84,11 @@ public class OrderService {
                 .paymentMethod(OrderDto.PaymentMethod.valueOf(entity.getPaymentMethod()))
                 .pickUpOption(OrderDto.PickUpOption.valueOf(entity.getPickUpOption()))
                 .userDto(userRepository.findById(entity.getUserID()).orElseThrow())
-                .build();
-        return OrderResponseEntity.fromOrderDto(orderRepository.save(preparedOrder));
-
+                .build());
     }
 
-    public OrderResponseEntity updateExistingOrder(String id, OrderRequestEntity entity) {
+    @TranferToResponseEntity
+    public Tranformable updateExistingOrder(String id, OrderRequestEntity entity) {
         OrderDto loadedOrder = orderRepository.findById(id).orElseThrow();
 
         loadedOrder.setLastUpdateDate(LocalDate.now());
@@ -101,22 +102,22 @@ public class OrderService {
         loadedOrder.setAddress3(entity.getAddress4());
         loadedOrder.setTotalPrice(calculatePrice(id, entity));
 
-        return OrderResponseEntity.fromOrderDto(orderRepository.save(loadedOrder));
+        return orderRepository.save(loadedOrder);
     }
 
-
-    public OrderResponseEntity deleteOrderByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteOrderByID(String id) {
         OrderDto loadedOrder = orderRepository.findById(id).orElseThrow();
         orderRepository.deleteById(id);
-        return OrderResponseEntity.fromOrderDto(loadedOrder);
+        return loadedOrder;
     }
 
-
-    public OrderResponseEntity getOrderByID(String id) {
-        return OrderResponseEntity.fromOrderDto(orderRepository.findById(id).orElseThrow());
+    @TranferToResponseEntity
+    public Tranformable getOrderByID(String id) {
+        return orderRepository.findById(id).orElseThrow();
     }
 
-    public List<OrderResponseEntity> getAllOrder(){
+    public List<OrderResponseEntity> getAllOrder() {
         return orderRepository.findAll().stream()
                 .map(OrderResponseEntity::fromOrderDto)
                 .toList();

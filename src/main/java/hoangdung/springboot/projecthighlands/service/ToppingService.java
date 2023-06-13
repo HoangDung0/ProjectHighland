@@ -4,10 +4,11 @@ import hoangdung.springboot.projecthighlands.model.dto.ToppingDto;
 import hoangdung.springboot.projecthighlands.model.request.ToppingRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.ToppingResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ToppingRepository;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,43 +17,34 @@ public class ToppingService {
     private final ToppingRepository toppingRepository;
 
     public List<ToppingResponseEntity> getAllToppings() {
-        List<ToppingDto> listToppingDto = toppingRepository.findAll();
-        List<ToppingResponseEntity> listToppingResponse = new ArrayList<ToppingResponseEntity>();
-        for (ToppingDto dto : listToppingDto ) {
-            listToppingResponse.add( ToppingResponseEntity.fromToppingDto(dto));
-        }
-        return listToppingResponse;
+        return toppingRepository.findAll().stream()
+                .map(ToppingResponseEntity::fromToppingDto)
+                .toList();
     }
 
-    public ToppingResponseEntity getToppingById(String id) {
-        return ToppingResponseEntity.fromToppingDto(toppingRepository.findById(id).orElse(null));
+    @TranferToResponseEntity
+    public Tranformable getToppingById(String id) {
+        return toppingRepository.findById(id).orElseThrow();
     }
 
     public List<ToppingResponseEntity> searchToppingsByName(String name) {
-        List<ToppingDto> listToppingDto = toppingRepository.findToppingsByToppingNameContainingIgnoreCase(name);
-
-        List<ToppingResponseEntity> listToppingResponse = new ArrayList<>();
-        for (ToppingDto dto : listToppingDto ) {
-            listToppingResponse.add( ToppingResponseEntity.fromToppingDto(dto));
-        }
-        return listToppingResponse;
-
+        return toppingRepository.findToppingsByToppingNameContainingIgnoreCase(name).stream()
+                .map(ToppingResponseEntity::fromToppingDto)
+                .toList();
     }
 
-
-    public ToppingResponseEntity createNewTopping(ToppingRequestEntity dto) {
-        ToppingDto preparedTopping = ToppingDto.builder()
+    @TranferToResponseEntity
+    public Tranformable createNewTopping(ToppingRequestEntity dto) {
+        return toppingRepository.save(ToppingDto.builder()
                 .toppingName(dto.getToppingName())
                 .price(dto.getPrice())
                 .description(dto.getDescription())
                 .thumbnailUrl(dto.getThumbnailUrl())
-                .build();
-
-        return ToppingResponseEntity.fromToppingDto(toppingRepository.save(preparedTopping));
-
+                .build());
     }
 
-    public ToppingResponseEntity updateExistingTopping(String id, ToppingRequestEntity dto){
+    @TranferToResponseEntity
+    public Tranformable updateExistingTopping(String id, ToppingRequestEntity dto) {
         ToppingDto loadedTopping = toppingRepository.findById(id).orElseThrow();
 
         loadedTopping.setToppingName(dto.getToppingName());
@@ -60,14 +52,13 @@ public class ToppingService {
         loadedTopping.setDescription(dto.getDescription());
         loadedTopping.setThumbnailUrl(dto.getThumbnailUrl());
 
-        return ToppingResponseEntity.fromToppingDto(toppingRepository.save(loadedTopping));
+        return toppingRepository.save(loadedTopping);
     }
 
-
-
-    public ToppingResponseEntity deleteToppingByID(String id) {
+    @TranferToResponseEntity
+    public Tranformable deleteToppingByID(String id) {
         ToppingDto loadedTopping = toppingRepository.findById(id).orElseThrow();
         toppingRepository.deleteById(id);
-        return ToppingResponseEntity.fromToppingDto(loadedTopping);
+        return loadedTopping;
     }
 }
