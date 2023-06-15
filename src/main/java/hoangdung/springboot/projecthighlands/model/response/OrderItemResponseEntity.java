@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.OrderItemDto;
+import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,15 +30,15 @@ public class OrderItemResponseEntity implements Tranformable {
     private String productID;
 
 
-    public static OrderItemResponseEntity fromOrderItemDto(OrderItemDto dto){
+    public static OrderItemResponseEntity fromOrderItem(OrderItem dao){
         return OrderItemResponseEntity.builder()
-                .orderItemID(dto.getOderItemID())
-                .quantity(dto.getQuantity())
-                //.listTopping(dto.getListTopping())
-                //.size(dto.getSizeJsonString())
-                .price(dto.getPrice())
-                .orderID(dto.getOrderDto().getOrderID())
-                .productID(dto.getProductDto().getProductID())
+                .orderItemID(dao.getOderItemID())
+                .quantity(dao.getQuantity())
+                //.listTopping(dao.getListTopping())
+                //.size(dao.getSizeJsonString())
+                .price(dao.getPrice())
+                .orderID(dao.getOrder().getOrderID())
+                .productID(dao.getProduct().getProductID())
                 .build();
     }
 }

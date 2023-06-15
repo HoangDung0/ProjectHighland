@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import hoangdung.springboot.projecthighlands.model.dto.TagDto;
+import hoangdung.springboot.projecthighlands.model.dao.Tag;
 import hoangdung.springboot.projecthighlands.model.request.TagRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.TagResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.TagRepository;
@@ -19,7 +19,7 @@ public class TagService {
 
     public List<TagResponseEntity> getAllTags() {
         return tagRepository.findAll().stream()
-                .map(TagResponseEntity::fromTagDto)
+                .map(TagResponseEntity::fromTag)
                 .toList();
     }
 
@@ -29,34 +29,34 @@ public class TagService {
 
     public List<TagResponseEntity> searchTagsByName(String name) {
         return tagRepository.findTagsByTagNameContainingIgnoreCase(name).stream()
-                .map(TagResponseEntity::fromTagDto)
+                .map(TagResponseEntity::fromTag)
                 .toList();
     }
 
 
     @TranferToResponseEntity
-    public Tranformable createNewTag(TagRequestEntity dto) {
-        return tagRepository.save(TagDto.builder()
-                .tagName(dto.getTagName())
-                .tagColor(dto.getTagColor())
-                .textDescription(dto.getTextDescription())
+    public Tranformable createNewTag(TagRequestEntity entity) {
+        return tagRepository.save(Tag.builder()
+                .tagName(entity.getTagName())
+                .tagColor(entity.getTagColor())
+                .textDescription(entity.getTextDescription())
                 .build());
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingTag(String id, TagRequestEntity dto) {
-        TagDto loadedTag = tagRepository.findById(id).orElseThrow();
+    public Tranformable updateExistingTag(String id, TagRequestEntity entity) {
+        Tag loadedTag = tagRepository.findById(id).orElseThrow();
 
-        loadedTag.setTagName(dto.getTagName());
-        loadedTag.setTagColor(dto.getTagColor());
-        loadedTag.setTextDescription(dto.getTextDescription());
+        loadedTag.setTagName(entity.getTagName());
+        loadedTag.setTagColor(entity.getTagColor());
+        loadedTag.setTextDescription(entity.getTextDescription());
 
         return tagRepository.save(loadedTag);
     }
 
     @TranferToResponseEntity
     public Tranformable deleteTagByID(String id) {
-        TagDto loadedTag = tagRepository.findById(id).orElseThrow();
+        Tag loadedTag = tagRepository.findById(id).orElseThrow();
         tagRepository.deleteById(id);
         return loadedTag;
     }

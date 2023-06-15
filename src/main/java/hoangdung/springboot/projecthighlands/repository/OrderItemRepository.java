@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.repository;
 
-import hoangdung.springboot.projecthighlands.model.dto.OrderItemDto;
+import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderItemRepository extends JpaRepository<OrderItemDto, String> {
+public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
 
-    @Query("select dto from OrderItemDto dto where dto.orderDto.orderID = ?1")
-    List<OrderItemDto> getOrderItemByOrderID(String id);
+    @Query("select orderItem from OrderItem orderItem where orderItem.order.orderID = ?1")
+    List<OrderItem> getOrderItemByOrderID(String id);
 
 }

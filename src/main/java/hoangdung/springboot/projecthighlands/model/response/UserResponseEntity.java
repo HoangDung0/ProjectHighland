@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.UserDto;
+import hoangdung.springboot.projecthighlands.model.dao.User;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
@@ -28,27 +28,25 @@ public class UserResponseEntity implements Tranformable {
 
     private boolean sex;
 
-//    private List<AddressesDto> listAddressesDto;
-
     private Date createDate;
 
     private boolean activated;
 
 
-    public static UserResponseEntity fromUserDto(UserDto dto)  {
-//        List<AddressesDto> addressesDtoList = AddressesService.convertListAddressesIDToListAddresses(dto.getListAddressesID());
+    public static UserResponseEntity fromUser(User dao)  {
+//        List<AddressesDto> addressesDtoList = AddressesService.convertListAddressesIDToListAddresses(dao.getListAddressesID());
         return  UserResponseEntity.builder()
-                .userID(dto.getUserID())
-                .userName(dto.getUserName())
-                .password(dto.getPassword())
-                .phone(dto.getPhone())
-                .email(dto.getEmail())
-                .dayOfBirth(dto.getDayOfBirth())
-                .role(dto.getRole().toString())
-                .sex(dto.isSex())
+                .userID(dao.getUserID())
+                .userName(dao.getUserName())
+                .password(dao.getPassword())
+                .phone(dao.getPhone())
+                .email(dao.getEmail())
+                .dayOfBirth(dao.getDayOfBirth())
+                .role(dao.getRole().toString())
+                .sex(dao.isSex())
 //                .listAddressesDto(addressesDtoList)
-                .createDate(dto.getCreateDate())
-                .activated(dto.isActivated())
+                .createDate(dao.getCreateDate())
+                .activated(dao.isActivated())
                 .build();
     }
 

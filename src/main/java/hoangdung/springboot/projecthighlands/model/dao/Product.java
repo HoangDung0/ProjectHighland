@@ -1,4 +1,4 @@
-package hoangdung.springboot.projecthighlands.model.dto;
+package hoangdung.springboot.projecthighlands.model.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;

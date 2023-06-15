@@ -1,7 +1,7 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hoangdung.springboot.projecthighlands.model.dto.ProductDto;
+import hoangdung.springboot.projecthighlands.model.dao.Product;
 import hoangdung.springboot.projecthighlands.model.request.ProductRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.ProductResponseEntity;
 import hoangdung.springboot.projecthighlands.model.response.TagResponseEntity;
@@ -60,31 +60,31 @@ public class ProductService {
 
     @TranferToResponseEntity
     public Tranformable createNewProduct(ProductRequestEntity entity) {
-        return productRepository.save(ProductDto.builder()
+        return productRepository.save(Product.builder()
                 .productName(entity.getProductName())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
                 .imageUrl(entity.getImageUrl())
-                .productCatalogDto(productCatalogRepository.findById(entity.getProductCatalogID()).orElseThrow())
+                .productCatalog(productCatalogRepository.findById(entity.getProductCatalogID()).orElseThrow())
                 .build());
     }
 
     @TranferToResponseEntity
     public Tranformable updateExistingProduct(String id, ProductRequestEntity entity) {
-        ProductDto loadedProduct = productRepository.findById(id).orElseThrow();
+        Product loadedProduct = productRepository.findById(id).orElseThrow();
 
         loadedProduct.setProductName(entity.getProductName());
         loadedProduct.setDescription(entity.getDescription());
         loadedProduct.setPrice(entity.getPrice());
         loadedProduct.setImageUrl(entity.getImageUrl());
-        loadedProduct.setProductCatalogDto(productCatalogRepository.findById(entity.getProductCatalogID()).orElseThrow());
+        loadedProduct.setProductCatalog(productCatalogRepository.findById(entity.getProductCatalogID()).orElseThrow());
 
         return productRepository.save(loadedProduct);
     }
 
     @TranferToResponseEntity
     public Tranformable deleteProductByID(String id) {
-        ProductDto loadedProduct = productRepository.findById(id).orElseThrow();
+        Product loadedProduct = productRepository.findById(id).orElseThrow();
         productRepository.deleteById(id);
         return loadedProduct;
     }
@@ -92,26 +92,26 @@ public class ProductService {
     public List<ProductResponseEntity> searchProductByProductName(String name) {
         return productRepository.searchProductByProductName(name)
                 .stream()
-                .map(ProductResponseEntity::fromProductDto)
+                .map(ProductResponseEntity::fromProduct)
                 .toList();
     }
 
     public List<ProductResponseEntity> getAllProduct() {
         return productRepository.findAll()
-                .stream().map(ProductResponseEntity::fromProductDto)
+                .stream().map(ProductResponseEntity::fromProduct)
                 .toList();
     }
 
     @TranferToResponseEntity
     public ProductResponseEntity getProductByID(String id) {
-        return ProductResponseEntity.fromProductDto(productRepository.findById(id).orElseThrow());
+        return ProductResponseEntity.fromProduct(productRepository.findById(id).orElseThrow());
     }
 
 
     //CRUD của Size Option
     @TranferToResponseEntity
     public Tranformable addSizeOption(String productID, String size, int price) {
-        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.put(size, price);
         loadedProduct.setSizeOptionJsonString(convertSizeOptionMapToString(sizeOption));
@@ -121,7 +121,7 @@ public class ProductService {
 
     @TranferToResponseEntity
     public Tranformable updateSizeOption(String productID, String size, int newPrice) {
-        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.replace(size, newPrice);
         loadedProduct.setSizeOptionJsonString(convertSizeOptionMapToString(sizeOption));
@@ -131,7 +131,7 @@ public class ProductService {
 
     @TranferToResponseEntity
     public Tranformable deleteSizeOption(String productID, String size) {
-        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.remove(size);
         loadedProduct.setSizeOptionJsonString(convertSizeOptionMapToString(sizeOption));
@@ -142,16 +142,16 @@ public class ProductService {
     //CRUD của Tag ID
     @TranferToResponseEntity
     public Tranformable addTag(String productID, String tagID) {
-        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        Product loadedProduct = productRepository.findById(productID).orElseThrow();
         List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
-        listTag.add(TagResponseEntity.fromTagDto(tagRepository.findById(tagID).orElseThrow()));
+        listTag.add(TagResponseEntity.fromTag(tagRepository.findById(tagID).orElseThrow()));
         loadedProduct.setTagJsonString(convertListTagToListTagID(listTag));
         return loadedProduct;
     }
 
     @TranferToResponseEntity
     public Tranformable deleteTag(String productID, String tagID) {
-        ProductDto loadedProduct = productRepository.findById(productID).orElseThrow();
+        Product loadedProduct = productRepository.findById(productID).orElseThrow();
         List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
         listTag.stream()
                 .filter(tagEntity -> tagEntity.getTagID().equalsIgnoreCase(tagID))

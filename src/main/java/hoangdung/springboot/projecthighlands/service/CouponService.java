@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import hoangdung.springboot.projecthighlands.model.dto.CouponDto;
+import hoangdung.springboot.projecthighlands.model.dao.Coupon;
 import hoangdung.springboot.projecthighlands.model.request.CouponRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.CouponResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.CouponRepository;
@@ -25,7 +25,7 @@ public class CouponService {
 
     public List<CouponResponseEntity> searchCouponByCouponName(String name) {
         return couponRepository.findCouponsByCouponNameContainingIgnoreCase(name).stream()
-                .map(CouponResponseEntity::fromCouponDto)
+                .map(CouponResponseEntity::fromCoupon)
                 .toList();
     }
 
@@ -33,7 +33,7 @@ public class CouponService {
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
     @TranferToResponseEntity
     public Tranformable createNewCoupon(CouponRequestEntity entity) {
-        return couponRepository.save(CouponDto.builder()
+        return couponRepository.save(Coupon.builder()
                 .couponName(entity.getCouponName())
                 .expirationDate(entity.getExpirationDate())
                 .couponCode(entity.getCouponCode())
@@ -48,7 +48,7 @@ public class CouponService {
 
     @TranferToResponseEntity
     public Tranformable updateExistingCoupon(String id, CouponRequestEntity entity) {
-        CouponDto loadedCoupon = couponRepository.findById(id).orElseThrow();
+        Coupon loadedCoupon = couponRepository.findById(id).orElseThrow();
 
         loadedCoupon.setCouponName(entity.getCouponName());
         loadedCoupon.setExpirationDate(entity.getExpirationDate());
@@ -65,7 +65,7 @@ public class CouponService {
 
     @TranferToResponseEntity
     public Tranformable deleteCouponByID(String id) {
-        CouponDto loadedCoupon = couponRepository.findById(id).orElseThrow();
+        Coupon loadedCoupon = couponRepository.findById(id).orElseThrow();
         couponRepository.deleteById(id);
         return loadedCoupon;
     }

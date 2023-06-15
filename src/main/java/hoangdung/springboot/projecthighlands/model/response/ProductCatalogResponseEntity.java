@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.ProductCatalogDto;
+import hoangdung.springboot.projecthighlands.model.dao.ProductCatalog;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +21,12 @@ public class ProductCatalogResponseEntity implements Tranformable {
 
     private String thumbnailUrl;
 
-    public static ProductCatalogResponseEntity fromProductCatalogDto(ProductCatalogDto dto) {
+    public static ProductCatalogResponseEntity fromProductCatalog(ProductCatalog dao) {
         return  ProductCatalogResponseEntity.builder()
-                .productCatalogID(dto.getProductCatalogID())
-                .productCatalogName(dto.getProductCatalogName())
-                .description(dto.getDescription())
-                .thumbnailUrl(dto.getThumbnailUrl())
+                .productCatalogID(dao.getProductCatalogID())
+                .productCatalogName(dao.getProductCatalogName())
+                .description(dao.getDescription())
+                .thumbnailUrl(dao.getThumbnailUrl())
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.CouponDto;
+import hoangdung.springboot.projecthighlands.model.dao.Coupon;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
@@ -31,18 +31,18 @@ public class CouponResponseEntity implements Tranformable {
     private float minOrderAmount;
 
 
-    public static CouponResponseEntity fromCouponDto(CouponDto dto) {
+    public static CouponResponseEntity fromCoupon(Coupon dao) {
         return CouponResponseEntity.builder()
-                .couponID(dto.getCouponID())
-                .couponName(dto.getCouponName())
-                .expirationDate(dto.getExpirationDate())
-                .couponCode(dto.getCouponCode())
-                .description(dto.getDescription())
-                .thumbnailUrl(dto.getThumbnailUrl())
-                .discountRate(dto.getDiscountRate())
-                .discountAmount(dto.getDiscountAmount())
-                .discountRateCapAmount(dto.getDiscountRateCapAmount())
-                .minOrderAmount(dto.getMinOrderAmount())
+                .couponID(dao.getCouponID())
+                .couponName(dao.getCouponName())
+                .expirationDate(dao.getExpirationDate())
+                .couponCode(dao.getCouponCode())
+                .description(dao.getDescription())
+                .thumbnailUrl(dao.getThumbnailUrl())
+                .discountRate(dao.getDiscountRate())
+                .discountAmount(dao.getDiscountAmount())
+                .discountRateCapAmount(dao.getDiscountRateCapAmount())
+                .minOrderAmount(dao.getMinOrderAmount())
                 .build();
     }
 

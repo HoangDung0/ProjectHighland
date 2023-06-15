@@ -1,7 +1,7 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hoangdung.springboot.projecthighlands.model.dto.OrderItemDto;
+import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.model.request.OrderItemRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.OrderItemResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
@@ -84,19 +84,19 @@ public class OrderItemService {
 
     @TranferToResponseEntity
     public Tranformable createNewOrderItem(OrderItemRequestEntity entity) {
-        return orderItemRepository.save(OrderItemDto.builder()
+        return orderItemRepository.save(OrderItem.builder()
                 .quantity(entity.getQuantity())
                 .listToppingJsonString(convertListToppingMapToString(entity.getListTopping()))
                 .price(pricePerOrderItem(entity))
-                .orderDto(orderRepository.findById(entity.getOrderID()).orElseThrow())
-                .productDto(productRepository.findById(entity.getProductID()).orElseThrow())
+                .order(orderRepository.findById(entity.getOrderID()).orElseThrow())
+                .product(productRepository.findById(entity.getProductID()).orElseThrow())
                 .sizeJsonString(convertSizeMapToString(entity.getSize()))
                 .build());
     }
 
     @TranferToResponseEntity
     public Tranformable updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
-        OrderItemDto loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
+        OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
 
         loadedOrderItem.setQuantity(entity.getQuantity());
         loadedOrderItem.setListToppingJsonString(convertListToppingMapToString(entity.getListTopping()));
@@ -108,7 +108,7 @@ public class OrderItemService {
 
     @TranferToResponseEntity
     public Tranformable deleteOrderItemByID(String id) {
-        OrderItemDto loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
+        OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
         orderItemRepository.deleteById(id);
         return loadedOrderItem;
     }
@@ -117,7 +117,7 @@ public class OrderItemService {
     public List<OrderItemResponseEntity> getOrderItemByOrderID(String id) {
         return orderItemRepository.getOrderItemByOrderID(id)
                 .stream()
-                .map(OrderItemResponseEntity::fromOrderItemDto)
+                .map(OrderItemResponseEntity::fromOrderItem)
                 .toList();
     }
 

@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.OrderDto;
+import hoangdung.springboot.projecthighlands.model.dao.Order;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,22 +44,22 @@ public class OrderResponseEntity implements Tranformable {
     private String userID;
 
 
-    public static OrderResponseEntity fromOrderDto(OrderDto dto) {
+    public static OrderResponseEntity fromOrder(Order dao) {
         return OrderResponseEntity.builder()
-                .orderID(dto.getOrderID())
-                .createdDate(dto.getCreatedDate())
-                .lastUpdateDate(dto.getLastUpdateDate())
-                .address1(dto.getAddress1())
-                .address2(dto.getAddress2())
-                .address3(dto.getAddress3())
-                .address4(dto.getAddress4())
-                .pickUpStore(dto.getPickUpStore())
-                .couponCode(dto.getCouponCode())
-                .totalPrice(dto.getTotalPrice())
-                .orderStatus(dto.getOrderStatus().toString())
-                .paymentMethod(dto.getPaymentMethod().toString())
-                .pickUpOption(dto.getPickUpOption().toString())
-                .userID(dto.getUserDto().getUserID())
+                .orderID(dao.getOrderID())
+                .createdDate(dao.getCreatedDate())
+                .lastUpdateDate(dao.getLastUpdateDate())
+                .address1(dao.getAddress1())
+                .address2(dao.getAddress2())
+                .address3(dao.getAddress3())
+                .address4(dao.getAddress4())
+                .pickUpStore(dao.getPickUpStore())
+                .couponCode(dao.getCouponCode())
+                .totalPrice(dao.getTotalPrice())
+                .orderStatus(dao.getOrderStatus().toString())
+                .paymentMethod(dao.getPaymentMethod().toString())
+                .pickUpOption(dao.getPickUpOption().toString())
+                .userID(dao.getUser().getUserID())
                 .build();
     }
 }

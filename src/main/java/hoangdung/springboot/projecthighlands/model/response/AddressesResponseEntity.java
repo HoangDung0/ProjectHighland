@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.AddressesDto;
+import hoangdung.springboot.projecthighlands.model.dao.Addresses;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
 
@@ -26,16 +26,16 @@ public class AddressesResponseEntity implements Tranformable {
 
     private String userID;
 
-    public static AddressesResponseEntity fromAddressesDto(AddressesDto dto) {
+    public static AddressesResponseEntity fromAddresses(Addresses dao) {
         return  AddressesResponseEntity.builder()
-                .addressID(dto.getAddressesID())
-                .addressesName(dto.getAddressesName())
-                .address1(dto.getAddress1())
-                .address2(dto.getAddress2())
-                .address3(dto.getAddress3())
-                .address4(dto.getAddress4())
-                .phoneNumber(dto.getPhoneNumber())
-                .userID(dto.getUserDto().getUserID())
+                .addressID(dao.getAddressesID())
+                .addressesName(dao.getAddressesName())
+                .address1(dao.getAddress1())
+                .address2(dao.getAddress2())
+                .address3(dao.getAddress3())
+                .address4(dao.getAddress4())
+                .phoneNumber(dao.getPhoneNumber())
+                .userID(dao.getUserDto().getUserID())
                 .build();
     }
 

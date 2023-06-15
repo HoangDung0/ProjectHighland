@@ -1,15 +1,15 @@
 package hoangdung.springboot.projecthighlands.repository;
 
-import hoangdung.springboot.projecthighlands.model.dto.ToppingDto;
+import hoangdung.springboot.projecthighlands.model.dao.Topping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ToppingRepository extends JpaRepository<ToppingDto, String> {
+public interface ToppingRepository extends JpaRepository<Topping, String> {
 
-    List<ToppingDto> findToppingsByToppingNameContainingIgnoreCase(String toppingName);
+    List<Topping> findToppingsByToppingNameContainingIgnoreCase(String toppingName);
 
 
 }

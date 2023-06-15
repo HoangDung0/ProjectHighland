@@ -3,7 +3,7 @@ package hoangdung.springboot.projecthighlands.service;
 import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
 import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
-import hoangdung.springboot.projecthighlands.model.dto.AddressesDto;
+import hoangdung.springboot.projecthighlands.model.dao.Addresses;
 import hoangdung.springboot.projecthighlands.model.request.AddressesRequestEntity;
 import hoangdung.springboot.projecthighlands.repository.AddressesRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
@@ -36,36 +36,36 @@ public class AddressesService {
     }
 
     @TranferToResponseEntity
-    public Tranformable createNewAddresses(String userID, AddressesRequestEntity requestEntity) {
-        return addressesRepository.save(AddressesDto.builder()
-                .addressesName(requestEntity.getAddressesName())
-                .address1(requestEntity.getAddress1())
-                .address2(requestEntity.getAddress2())
-                .address3(requestEntity.getAddress3())
-                .address4(requestEntity.getAddress4())
-                .phoneNumber(requestEntity.getPhoneNumber())
-                .userDto(userRepository.findById(requestEntity.getUserID()).orElseThrow())
+    public Tranformable createNewAddresses(String userID, AddressesRequestEntity entity) {
+        return addressesRepository.save(Addresses.builder()
+                .addressesName(entity.getAddressesName())
+                .address1(entity.getAddress1())
+                .address2(entity.getAddress2())
+                .address3(entity.getAddress3())
+                .address4(entity.getAddress4())
+                .phoneNumber(entity.getPhoneNumber())
+                .user(userRepository.findById(entity.getUserID()).orElseThrow())
                 .build());
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingAddresses(String id, AddressesRequestEntity requestEntity) {
-        AddressesDto loadedAddresses = addressesRepository.findById(id).orElseThrow();
+    public Tranformable updateExistingAddresses(String id, AddressesRequestEntity entity) {
+        Addresses loadedAddresses = addressesRepository.findById(id).orElseThrow();
 
-        loadedAddresses.setAddressesName(requestEntity.getAddressesName());
-        loadedAddresses.setAddress1(requestEntity.getAddress1());
-        loadedAddresses.setAddress2(requestEntity.getAddress2());
-        loadedAddresses.setAddress3(requestEntity.getAddress3());
-        loadedAddresses.setAddress4(requestEntity.getAddress4());
-        loadedAddresses.setUserDto(userRepository.findById(requestEntity.getUserID()).orElseThrow());
-        loadedAddresses.setPhoneNumber(requestEntity.getPhoneNumber());
+        loadedAddresses.setAddressesName(entity.getAddressesName());
+        loadedAddresses.setAddress1(entity.getAddress1());
+        loadedAddresses.setAddress2(entity.getAddress2());
+        loadedAddresses.setAddress3(entity.getAddress3());
+        loadedAddresses.setAddress4(entity.getAddress4());
+        loadedAddresses.setUser(userRepository.findById(entity.getUserID()).orElseThrow());
+        loadedAddresses.setPhoneNumber(entity.getPhoneNumber());
 
         return addressesRepository.save(loadedAddresses);
     }
 
     @TranferToResponseEntity
     public Tranformable deleteAddressesByID(String id) {
-        AddressesDto loadedAddresses = addressesRepository.findById(id).orElseThrow();
+        Addresses loadedAddresses = addressesRepository.findById(id).orElseThrow();
         addressesRepository.deleteById(id);
         return loadedAddresses;
     }

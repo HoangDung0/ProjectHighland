@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.CustomerInfoDto;
+import hoangdung.springboot.projecthighlands.model.dao.CustomerInfo;
 import hoangdung.springboot.projecthighlands.service.CustomerInfoService;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.*;
@@ -25,16 +25,16 @@ public class CustomerInfoResponseEntity implements Tranformable {
 
     private String userID;
 
-    public static CustomerInfoResponseEntity fromCustomerInfoDto(CustomerInfoDto dto)  {
+    public static CustomerInfoResponseEntity fromCustomerInfo(CustomerInfo dao)  {
         List<CouponResponseEntity> listUsedCoupons =
-                CustomerInfoService.convertListUsedCouponIDToListUsedCoupons(dto.getUsedCouponJsonString());
+                CustomerInfoService.convertListUsedCouponIDToListUsedCoupons(dao.getUsedCouponJsonString());
         return CustomerInfoResponseEntity.builder()
-                .customerID(dto.getCustomerID())
-                .point(dto.getPoint())
-                .rank(dto.getRank())
-                .cardInfo(dto.getCardInfo())
+                .customerID(dao.getCustomerID())
+                .point(dao.getPoint())
+                .rank(dao.getRank())
+                .cardInfo(dao.getCardInfo())
                 .listUsedCoupons(listUsedCoupons)
-                .userID(dto.getUserDto().getUserID())
+                .userID(dao.getUser().getUserID())
                 .build();
     }
 }

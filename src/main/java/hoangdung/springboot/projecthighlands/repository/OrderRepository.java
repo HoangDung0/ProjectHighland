@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.repository;
 
-import hoangdung.springboot.projecthighlands.model.dto.OrderDto;
+import hoangdung.springboot.projecthighlands.model.dao.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderDto, String > {
-    @Query("select dto from OrderDto dto where dto.userDto.userID = ?1 and dto.couponCode = ?2 " +
-            "and (dto.orderStatus = 'PLACED' or dto.orderStatus = 'COMPLETED') ")
-    List<OrderDto> getOrderByUserIDAndCouponCode(String id, String couponCode);
+public interface OrderRepository extends JpaRepository<Order, String > {
+    @Query("select order from Order order where order.user.userID = ?1 and dto.couponCode = ?2 " +
+            "and (order.orderStatus = 'PLACED' or order.orderStatus = 'COMPLETED') ")
+    List<Order> getOrderByUserIDAndCouponCode(String id, String couponCode);
 }

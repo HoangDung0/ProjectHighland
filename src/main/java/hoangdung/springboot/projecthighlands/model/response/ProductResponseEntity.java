@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.ProductDto;
+import hoangdung.springboot.projecthighlands.model.dao.Product;
 import hoangdung.springboot.projecthighlands.service.ProductService;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
@@ -33,17 +33,17 @@ public class ProductResponseEntity implements Tranformable {
 
     private String productCatalogID;
 
-    public static ProductResponseEntity fromProductDto(ProductDto dto)  {
+    public static ProductResponseEntity fromProduct(Product dao)  {
 
         return ProductResponseEntity.builder()
-                .productID(dto.getProductID())
-                .productName(dto.getProductName())
-                .description(dto.getDescription())
-                .price(dto.getPrice())
-                .imageUrl(dto.getImageUrl())
-                .sizeOption(ProductService.convertSizeOptionStringToMap(dto.getSizeOptionJsonString()))
-                .listTag(ProductService.convertListTagIDToListTag(dto.getTagJsonString()))
-                .productCatalogID(dto.getProductCatalogDto().getProductCatalogID())
+                .productID(dao.getProductID())
+                .productName(dao.getProductName())
+                .description(dao.getDescription())
+                .price(dao.getPrice())
+                .imageUrl(dao.getImageUrl())
+                .sizeOption(ProductService.convertSizeOptionStringToMap(dao.getSizeOptionJsonString()))
+                .listTag(ProductService.convertListTagIDToListTag(dao.getTagJsonString()))
+                .productCatalogID(dao.getProductCatalog().getProductCatalogID())
                 .build();
     }
 

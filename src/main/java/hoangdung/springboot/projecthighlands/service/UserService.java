@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import hoangdung.springboot.projecthighlands.model.dto.UserDto;
+import hoangdung.springboot.projecthighlands.model.dao.User;
 import hoangdung.springboot.projecthighlands.model.request.UserRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.UserResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
@@ -24,46 +24,46 @@ public class UserService {
 
     public List<UserResponseEntity> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(UserResponseEntity::fromUserDto)
+                .map(UserResponseEntity::fromUser)
                 .toList();
     }
 
 
     public List<UserResponseEntity> searchUsersByName(String name) {
         return userRepository.findUsersByUserNameContainingIgnoreCase(name).stream()
-                .map(UserResponseEntity::fromUserDto)
+                .map(UserResponseEntity::fromUser)
                 .toList();
     }
 
 
     @TranferToResponseEntity
-    public Tranformable createNewUser(UserRequestEntity dto) {
-        return userRepository.save(UserDto.builder()
-                .userName(dto.getUserName())
-                .password(dto.getPassword())
-                .phone(dto.getPhone())
-                .email(dto.getEmail())
-                .dayOfBirth(dto.getDayOfBirth())
-                .role(UserDto.UserRole.valueOf(dto.getRole()))
-                .sex(dto.isSex())
-                .createDate(dto.getCreateDate())
-                .activated(dto.isActivated())
+    public Tranformable createNewUser(UserRequestEntity entity) {
+        return userRepository.save(User.builder()
+                .userName(entity.getUserName())
+                .password(entity.getPassword())
+                .phone(entity.getPhone())
+                .email(entity.getEmail())
+                .dayOfBirth(entity.getDayOfBirth())
+                .role(User.UserRole.valueOf(entity.getRole()))
+                .sex(entity.isSex())
+                .createDate(entity.getCreateDate())
+                .activated(entity.isActivated())
                 .build());
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingUser(String id, UserRequestEntity dto) {
-        UserDto loadedUser = userRepository.findById(id).orElseThrow();
+    public Tranformable updateExistingUser(String id, UserRequestEntity entity) {
+        User loadedUser = userRepository.findById(id).orElseThrow();
 
-        loadedUser.setUserName(dto.getUserName());
-        loadedUser.setPassword(dto.getPassword());
-        loadedUser.setPhone(dto.getPhone());
-        loadedUser.setEmail(dto.getEmail());
-        loadedUser.setDayOfBirth(dto.getDayOfBirth());
-        loadedUser.setRole(UserDto.UserRole.valueOf(dto.getRole()));
-        loadedUser.setSex(dto.isSex());
-        loadedUser.setCreateDate(dto.getCreateDate());
-        loadedUser.setActivated(dto.isActivated());
+        loadedUser.setUserName(entity.getUserName());
+        loadedUser.setPassword(entity.getPassword());
+        loadedUser.setPhone(entity.getPhone());
+        loadedUser.setEmail(entity.getEmail());
+        loadedUser.setDayOfBirth(entity.getDayOfBirth());
+        loadedUser.setRole(User.UserRole.valueOf(entity.getRole()));
+        loadedUser.setSex(entity.isSex());
+        loadedUser.setCreateDate(entity.getCreateDate());
+        loadedUser.setActivated(entity.isActivated());
 
         return loadedUser;
     }
@@ -72,14 +72,14 @@ public class UserService {
     public Tranformable updateUserRoleOfExistingUser(String id, String newRole) {
         return userRepository.findById(id)
                 .map(loadedUser -> {
-                    loadedUser.setRole(UserDto.UserRole.valueOf(newRole));
+                    loadedUser.setRole(User.UserRole.valueOf(newRole));
                     return loadedUser;
                 }).orElseThrow();
     }
 
     @TranferToResponseEntity
     public Tranformable deleteUserByID(String id) {
-        UserDto loadedUser = userRepository.findById(id).orElseThrow();
+        User loadedUser = userRepository.findById(id).orElseThrow();
         userRepository.deleteById(id);
         return loadedUser;
     }

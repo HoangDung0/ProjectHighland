@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.ToppingDto;
+import hoangdung.springboot.projecthighlands.model.dao.Topping;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +23,13 @@ public class ToppingResponseEntity implements Tranformable {
 
     private String thumbnailUrl;
 
-    public static ToppingResponseEntity fromToppingDto(ToppingDto dto){
+    public static ToppingResponseEntity fromTopping(Topping dao){
         return  ToppingResponseEntity.builder()
-                .toppingID(dto.getToppingID())
-                .toppingName(dto.getToppingName())
-                .price(dto.getPrice())
-                .description(dto.getDescription())
-                .thumbnailUrl(dto.getThumbnailUrl())
+                .toppingID(dao.getToppingID())
+                .toppingName(dao.getToppingName())
+                .price(dao.getPrice())
+                .description(dao.getDescription())
+                .thumbnailUrl(dao.getThumbnailUrl())
                 .build();
     }
 

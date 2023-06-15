@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
-import hoangdung.springboot.projecthighlands.model.dto.ProductCatalogDto;
+import hoangdung.springboot.projecthighlands.model.dao.ProductCatalog;
 import hoangdung.springboot.projecthighlands.model.request.ProductCatalogRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.ProductCatalogResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ProductCatalogRepository;
@@ -19,7 +19,7 @@ public class ProductCatalogService {
 
     public List<ProductCatalogResponseEntity> getAllProductCatalogs() {
         return productCatalogRepository.findAll().stream()
-                .map(ProductCatalogResponseEntity::fromProductCatalogDto)
+                .map(ProductCatalogResponseEntity::fromProductCatalog)
                 .toList();
     }
 
@@ -30,33 +30,33 @@ public class ProductCatalogService {
 
     public List<ProductCatalogResponseEntity> searchProductCatalogsByName(String name) {
         return productCatalogRepository.findProductCatalogByProductCatalogNameContainingIgnoreCase(name).stream()
-                .map(ProductCatalogResponseEntity::fromProductCatalogDto)
+                .map(ProductCatalogResponseEntity::fromProductCatalog)
                 .toList();
     }
 
     @TranferToResponseEntity
-    public Tranformable createNewProductCatalog(ProductCatalogRequestEntity requestEntity) {
-        return productCatalogRepository.save(ProductCatalogDto.builder()
-                .productCatalogName(requestEntity.getProductCatalogName())
-                .description(requestEntity.getDescription())
-                .thumbnailUrl(requestEntity.getThumbnailUrl())
+    public Tranformable createNewProductCatalog(ProductCatalogRequestEntity entity) {
+        return productCatalogRepository.save(ProductCatalog.builder()
+                .productCatalogName(entity.getProductCatalogName())
+                .description(entity.getDescription())
+                .thumbnailUrl(entity.getThumbnailUrl())
                 .build());
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingProductCatalog(String id, ProductCatalogRequestEntity requestEntity) {
-        ProductCatalogDto loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
+    public Tranformable updateExistingProductCatalog(String id, ProductCatalogRequestEntity entity) {
+        ProductCatalog loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
 
-        loadedProductCatalog.setProductCatalogName(requestEntity.getProductCatalogName());
-        loadedProductCatalog.setDescription(requestEntity.getDescription());
-        loadedProductCatalog.setThumbnailUrl(requestEntity.getThumbnailUrl());
+        loadedProductCatalog.setProductCatalogName(entity.getProductCatalogName());
+        loadedProductCatalog.setDescription(entity.getDescription());
+        loadedProductCatalog.setThumbnailUrl(entity.getThumbnailUrl());
 
         return productCatalogRepository.save(loadedProductCatalog);
     }
 
     @TranferToResponseEntity
     public Tranformable deleteProductCatalogByID(String id) {
-        ProductCatalogDto loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
+        ProductCatalog loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
         productCatalogRepository.deleteById(id);
         return loadedProductCatalog;
     }

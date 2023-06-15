@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dto.TagDto;
+import hoangdung.springboot.projecthighlands.model.dao.Tag;
 import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +21,12 @@ public class TagResponseEntity implements Tranformable {
 
     private String textDescription;
 
-    public static TagResponseEntity fromTagDto(TagDto dto){
+    public static TagResponseEntity fromTag(Tag dao){
         return  TagResponseEntity.builder()
-                .tagID(dto.getTagID())
-                .tagName(dto.getTagName())
-                .tagColor(dto.getTagColor())
-                .textDescription(dto.getTextDescription())
+                .tagID(dao.getTagID())
+                .tagName(dao.getTagName())
+                .tagColor(dao.getTagColor())
+                .textDescription(dao.getTextDescription())
                 .build();
     }
 

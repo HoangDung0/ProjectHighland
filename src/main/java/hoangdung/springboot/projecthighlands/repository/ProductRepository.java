@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.repository;
 
-import hoangdung.springboot.projecthighlands.model.dto.ProductDto;
+import hoangdung.springboot.projecthighlands.model.dao.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductDto, String> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 
-    @Query("select dto from ProductDto dto where dto.productName = ?1")
-    public List<ProductDto> searchProductByProductName(String name);
+    @Query("select product from Product product where product.productName = ?1")
+    public List<Product> searchProductByProductName(String name);
 }
