@@ -12,15 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tbl_topping")
-public class ToppingDto implements Tranformable {
+@Table(name = "tbl_productcatalog")
+public class ProductCatalog implements Tranformable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String toppingID;
+    private String productCatalogID;
 
-    private String toppingName;
-
-    private float price;
+    private String productCatalogName;
 
     private String description;
 

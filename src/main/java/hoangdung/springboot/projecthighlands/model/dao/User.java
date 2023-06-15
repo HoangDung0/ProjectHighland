@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_user")
-public class UserDto implements Tranformable {
+public class User implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_product")
-public class ProductDto implements Tranformable {
+public class Product implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,7 +35,7 @@ public class ProductDto implements Tranformable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productCatalogID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private ProductCatalogDto productCatalogDto;
+    private ProductCatalog productCatalog;
 
 
 

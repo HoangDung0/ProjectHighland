@@ -13,29 +13,23 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tbl_orderitem")
-public class OrderItemDto implements Tranformable {
+@Table(name = "tbl_customerinfo")
+public class CustomerInfo implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String oderItemID;
+    private String customerID;
 
-    private int quantity;
+    private int point;
 
-    private String listToppingJsonString;
+    private int rank;
 
-    private String sizeJsonString;
+    private String usedCouponJsonString;
 
-    private float price;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderID")
-    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private OrderDto orderDto;
+    private String cardInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productID")
+    @JoinColumn(name = "userID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private ProductDto productDto;
-
+    private User user;
 }

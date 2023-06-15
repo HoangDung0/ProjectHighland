@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_tag")
-public class TagDto implements Tranformable {
+public class Tag implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

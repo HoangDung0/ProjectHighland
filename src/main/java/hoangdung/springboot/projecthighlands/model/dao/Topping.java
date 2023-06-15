@@ -12,30 +12,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tbl_coupon")
-public class CouponDto implements Tranformable {
-
+@Table(name = "tbl_topping")
+public class Topping implements Tranformable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String couponID;
+    private String toppingID;
 
-    private String couponName;
+    private String toppingName;
 
-    private String expirationDate;
-
-    @Column(unique = true)
-    private String couponCode;
+    private float price;
 
     private String description;
 
     private String thumbnailUrl;
-
-    private float discountRate;
-
-    private float discountAmount;
-
-    private float discountRateCapAmount;
-
-    private float minOrderAmount;
-
 }

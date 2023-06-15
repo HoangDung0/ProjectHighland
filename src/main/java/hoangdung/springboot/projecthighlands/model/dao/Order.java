@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_order")
-public class OrderDto implements Tranformable {
+public class Order implements Tranformable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,7 +52,7 @@ public class OrderDto implements Tranformable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userID")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
-    private UserDto userDto;
+    private User user;
 
     public enum OrderStatus{
         PLACED, PENDING, COMPLETED, CANCELLED
