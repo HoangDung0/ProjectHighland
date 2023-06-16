@@ -1,15 +1,15 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.Product;
 import hoangdung.springboot.projecthighlands.model.request.ProductRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.ProductResponseEntity;
 import hoangdung.springboot.projecthighlands.model.response.TagResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ProductCatalogRepository;
 import hoangdung.springboot.projecthighlands.repository.ProductRepository;
 import hoangdung.springboot.projecthighlands.repository.TagRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class ProductService {
 
 
     @TranferToResponseEntity
-    public Tranformable createNewProduct(ProductRequestEntity entity) {
+    public Transformable createNewProduct(ProductRequestEntity entity) {
         return productRepository.save(Product.builder()
                 .productName(entity.getProductName())
                 .description(entity.getDescription())
@@ -70,7 +70,7 @@ public class ProductService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingProduct(String id, ProductRequestEntity entity) {
+    public Transformable updateExistingProduct(String id, ProductRequestEntity entity) {
         Product loadedProduct = productRepository.findById(id).orElseThrow();
 
         loadedProduct.setProductName(entity.getProductName());
@@ -83,34 +83,31 @@ public class ProductService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteProductByID(String id) {
+    public Transformable deleteProductByID(String id) {
         Product loadedProduct = productRepository.findById(id).orElseThrow();
         productRepository.deleteById(id);
         return loadedProduct;
     }
 
-    public List<ProductResponseEntity> searchProductByProductName(String name) {
-        return productRepository.searchProductByProductName(name)
-                .stream()
-                .map(ProductResponseEntity::fromProduct)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> searchProductByProductName(String name) {
+        return productRepository.searchProductByProductName(name);
     }
 
-    public List<ProductResponseEntity> getAllProduct() {
-        return productRepository.findAll()
-                .stream().map(ProductResponseEntity::fromProduct)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllProduct() {
+        return productRepository.findAll();
     }
 
     @TranferToResponseEntity
-    public ProductResponseEntity getProductByID(String id) {
-        return ProductResponseEntity.fromProduct(productRepository.findById(id).orElseThrow());
+    public Transformable getProductByID(String id) {
+        return productRepository.findById(id).orElseThrow();
     }
 
 
     //CRUD của Size Option
     @TranferToResponseEntity
-    public Tranformable addSizeOption(String productID, String size, int price) {
+    public Transformable addSizeOption(String productID, String size, int price) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.put(size, price);
@@ -120,7 +117,7 @@ public class ProductService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateSizeOption(String productID, String size, int newPrice) {
+    public Transformable updateSizeOption(String productID, String size, int newPrice) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.replace(size, newPrice);
@@ -130,7 +127,7 @@ public class ProductService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteSizeOption(String productID, String size) {
+    public Transformable deleteSizeOption(String productID, String size) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         Map<String, Integer> sizeOption = convertSizeOptionStringToMap(loadedProduct.getSizeOptionJsonString());
         sizeOption.remove(size);
@@ -141,7 +138,7 @@ public class ProductService {
 
     //CRUD của Tag ID
     @TranferToResponseEntity
-    public Tranformable addTag(String productID, String tagID) {
+    public Transformable addTag(String productID, String tagID) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
         listTag.add(TagResponseEntity.fromTag(tagRepository.findById(tagID).orElseThrow()));
@@ -150,7 +147,7 @@ public class ProductService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteTag(String productID, String tagID) {
+    public Transformable deleteTag(String productID, String tagID) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         List<TagResponseEntity> listTag = convertListTagIDToListTag(loadedProduct.getTagJsonString());
         listTag.stream()

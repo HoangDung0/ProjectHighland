@@ -1,14 +1,14 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dao.Coupon;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CouponResponseEntity implements Tranformable {
+public class CouponResponseEntity implements Transformable {
 
     private String couponID;
 

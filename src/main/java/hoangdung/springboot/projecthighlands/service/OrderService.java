@@ -1,15 +1,15 @@
 package hoangdung.springboot.projecthighlands.service;
 
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.Coupon;
 import hoangdung.springboot.projecthighlands.model.dao.Order;
 import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.model.request.OrderRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.OrderResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class OrderService {
 
 
     @TranferToResponseEntity
-    public Tranformable createNewOrder(OrderRequestEntity entity) {
+    public Transformable createNewOrder(OrderRequestEntity entity) {
         return orderRepository.save(Order.builder()
                 .createdDate(LocalDate.now())
                 .lastUpdateDate(LocalDate.now())
@@ -90,7 +90,7 @@ public class OrderService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingOrder(String id, OrderRequestEntity entity) {
+    public Transformable updateExistingOrder(String id, OrderRequestEntity entity) {
         Order loadedOrder = orderRepository.findById(id).orElseThrow();
 
         loadedOrder.setLastUpdateDate(LocalDate.now());
@@ -108,19 +108,20 @@ public class OrderService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteOrderByID(String id) {
+    public Transformable deleteOrderByID(String id) {
         Order loadedOrder = orderRepository.findById(id).orElseThrow();
         orderRepository.deleteById(id);
         return loadedOrder;
     }
 
     @TranferToResponseEntity
-    public Tranformable getOrderByID(String id) {
+    public Transformable getOrderByID(String id) {
         return orderRepository.findById(id).orElseThrow();
     }
 
-    public List<OrderResponseEntity> getAllOrder() {
-        return orderRepository.findAll().stream().map(OrderResponseEntity::fromOrder).toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllOrder() {
+        return orderRepository.findAll();
     }
 
 }

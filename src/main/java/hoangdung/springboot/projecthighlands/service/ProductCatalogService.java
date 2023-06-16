@@ -1,11 +1,11 @@
 package hoangdung.springboot.projecthighlands.service;
 
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.ProductCatalog;
 import hoangdung.springboot.projecthighlands.model.request.ProductCatalogRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.ProductCatalogResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ProductCatalogRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,25 +17,23 @@ public class ProductCatalogService {
 
     private final ProductCatalogRepository productCatalogRepository;
 
-    public List<ProductCatalogResponseEntity> getAllProductCatalogs() {
-        return productCatalogRepository.findAll().stream()
-                .map(ProductCatalogResponseEntity::fromProductCatalog)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllProductCatalogs() {
+        return productCatalogRepository.findAll();
     }
 
     @TranferToResponseEntity
-    public Tranformable getProductCatalogById(String id) {
+    public Transformable getProductCatalogById(String id) {
         return productCatalogRepository.findById(id).orElseThrow();
     }
 
-    public List<ProductCatalogResponseEntity> searchProductCatalogsByName(String name) {
-        return productCatalogRepository.findProductCatalogByProductCatalogNameContainingIgnoreCase(name).stream()
-                .map(ProductCatalogResponseEntity::fromProductCatalog)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> searchProductCatalogsByName(String name) {
+        return productCatalogRepository.findProductCatalogByProductCatalogNameContainingIgnoreCase(name);
     }
 
     @TranferToResponseEntity
-    public Tranformable createNewProductCatalog(ProductCatalogRequestEntity entity) {
+    public Transformable createNewProductCatalog(ProductCatalogRequestEntity entity) {
         return productCatalogRepository.save(ProductCatalog.builder()
                 .productCatalogName(entity.getProductCatalogName())
                 .description(entity.getDescription())
@@ -44,7 +42,7 @@ public class ProductCatalogService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingProductCatalog(String id, ProductCatalogRequestEntity entity) {
+    public Transformable updateExistingProductCatalog(String id, ProductCatalogRequestEntity entity) {
         ProductCatalog loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
 
         loadedProductCatalog.setProductCatalogName(entity.getProductCatalogName());
@@ -55,7 +53,7 @@ public class ProductCatalogService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteProductCatalogByID(String id) {
+    public Transformable deleteProductCatalogByID(String id) {
         ProductCatalog loadedProductCatalog = productCatalogRepository.findById(id).orElseThrow();
         productCatalogRepository.deleteById(id);
         return loadedProductCatalog;

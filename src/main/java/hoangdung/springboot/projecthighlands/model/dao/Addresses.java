@@ -1,7 +1,7 @@
 package hoangdung.springboot.projecthighlands.model.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tbl_addresses")
-public class Addresses implements Tranformable {
+public class Addresses implements Transformable {
 
 
     @Id

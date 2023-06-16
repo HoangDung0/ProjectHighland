@@ -1,7 +1,7 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItemResponseEntity implements Tranformable {
+public class OrderItemResponseEntity implements Transformable {
 
     private String orderItemID;
 

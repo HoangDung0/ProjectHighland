@@ -1,11 +1,11 @@
 package hoangdung.springboot.projecthighlands.service;
 
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.Topping;
 import hoangdung.springboot.projecthighlands.model.request.ToppingRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.ToppingResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.ToppingRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +16,24 @@ import java.util.List;
 public class ToppingService {
     private final ToppingRepository toppingRepository;
 
-    public List<ToppingResponseEntity> getAllToppings() {
-        return toppingRepository.findAll().stream()
-                .map(ToppingResponseEntity::fromTopping)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllToppings() {
+        return toppingRepository.findAll();
     }
 
     @TranferToResponseEntity
-    public Tranformable getToppingById(String id) {
+    public Transformable getToppingById(String id) {
         return toppingRepository.findById(id).orElseThrow();
     }
 
-    public List<ToppingResponseEntity> searchToppingsByName(String name) {
-        return toppingRepository.findToppingsByToppingNameContainingIgnoreCase(name).stream()
-                .map(ToppingResponseEntity::fromTopping)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> searchToppingsByName(String name) {
+        return toppingRepository.findToppingsByToppingNameContainingIgnoreCase(name);
     }
 
+
     @TranferToResponseEntity
-    public Tranformable createNewTopping(ToppingRequestEntity entity) {
+    public Transformable createNewTopping(ToppingRequestEntity entity) {
         return toppingRepository.save(Topping.builder()
                 .toppingName(entity.getToppingName())
                 .price(entity.getPrice())
@@ -44,7 +43,7 @@ public class ToppingService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingTopping(String id, ToppingRequestEntity entity) {
+    public Transformable updateExistingTopping(String id, ToppingRequestEntity entity) {
         Topping loadedTopping = toppingRepository.findById(id).orElseThrow();
 
         loadedTopping.setToppingName(entity.getToppingName());
@@ -56,7 +55,7 @@ public class ToppingService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteToppingByID(String id) {
+    public Transformable deleteToppingByID(String id) {
         Topping loadedTopping = toppingRepository.findById(id).orElseThrow();
         toppingRepository.deleteById(id);
         return loadedTopping;

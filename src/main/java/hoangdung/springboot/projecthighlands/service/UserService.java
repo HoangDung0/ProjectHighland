@@ -1,11 +1,11 @@
 package hoangdung.springboot.projecthighlands.service;
 
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.User;
 import hoangdung.springboot.projecthighlands.model.request.UserRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.UserResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,26 +18,23 @@ public class UserService {
     private final UserRepository userRepository;
 
     @TranferToResponseEntity
-    public Tranformable getUserById(String id) {
+    public Transformable getUserById(String id) {
         return userRepository.findById(id).orElseThrow();
     }
 
-    public List<UserResponseEntity> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(UserResponseEntity::fromUser)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllUsers() {
+        return  userRepository.findAll();
     }
 
-
-    public List<UserResponseEntity> searchUsersByName(String name) {
-        return userRepository.findUsersByUserNameContainingIgnoreCase(name).stream()
-                .map(UserResponseEntity::fromUser)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> searchUsersByName(String name) {
+        return userRepository.findUsersByUserNameContainingIgnoreCase(name);
     }
 
 
     @TranferToResponseEntity
-    public Tranformable createNewUser(UserRequestEntity entity) {
+    public Transformable createNewUser(UserRequestEntity entity) {
         return userRepository.save(User.builder()
                 .userName(entity.getUserName())
                 .password(entity.getPassword())
@@ -52,7 +49,7 @@ public class UserService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingUser(String id, UserRequestEntity entity) {
+    public Transformable updateExistingUser(String id, UserRequestEntity entity) {
         User loadedUser = userRepository.findById(id).orElseThrow();
 
         loadedUser.setUserName(entity.getUserName());
@@ -69,7 +66,7 @@ public class UserService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateUserRoleOfExistingUser(String id, String newRole) {
+    public Transformable updateUserRoleOfExistingUser(String id, String newRole) {
         return userRepository.findById(id)
                 .map(loadedUser -> {
                     loadedUser.setRole(User.UserRole.valueOf(newRole));
@@ -78,7 +75,7 @@ public class UserService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteUserByID(String id) {
+    public Transformable deleteUserByID(String id) {
         User loadedUser = userRepository.findById(id).orElseThrow();
         userRepository.deleteById(id);
         return loadedUser;

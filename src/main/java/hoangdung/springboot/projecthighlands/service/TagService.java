@@ -1,11 +1,11 @@
 package hoangdung.springboot.projecthighlands.service;
 
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.Tag;
 import hoangdung.springboot.projecthighlands.model.request.TagRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.TagResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.TagRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,25 +17,24 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public List<TagResponseEntity> getAllTags() {
-        return tagRepository.findAll().stream()
-                .map(TagResponseEntity::fromTag)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getAllTags() {
+        return tagRepository.findAll();
     }
 
-    public Tranformable getTagByID(String id) {
+    @TranferToResponseEntity
+    public Transformable getTagByID(String id) {
         return tagRepository.findById(id).orElseThrow();
     }
 
-    public List<TagResponseEntity> searchTagsByName(String name) {
-        return tagRepository.findTagsByTagNameContainingIgnoreCase(name).stream()
-                .map(TagResponseEntity::fromTag)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> searchTagsByName(String name) {
+        return tagRepository.findTagsByTagNameContainingIgnoreCase(name);
     }
 
 
     @TranferToResponseEntity
-    public Tranformable createNewTag(TagRequestEntity entity) {
+    public Transformable createNewTag(TagRequestEntity entity) {
         return tagRepository.save(Tag.builder()
                 .tagName(entity.getTagName())
                 .tagColor(entity.getTagColor())
@@ -44,7 +43,7 @@ public class TagService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingTag(String id, TagRequestEntity entity) {
+    public Transformable updateExistingTag(String id, TagRequestEntity entity) {
         Tag loadedTag = tagRepository.findById(id).orElseThrow();
 
         loadedTag.setTagName(entity.getTagName());
@@ -55,7 +54,7 @@ public class TagService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteTagByID(String id) {
+    public Transformable deleteTagByID(String id) {
         Tag loadedTag = tagRepository.findById(id).orElseThrow();
         tagRepository.deleteById(id);
         return loadedTag;

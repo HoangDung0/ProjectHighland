@@ -1,15 +1,15 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
+import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.model.request.OrderItemRequestEntity;
-import hoangdung.springboot.projecthighlands.model.response.OrderItemResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.ProductRepository;
 import hoangdung.springboot.projecthighlands.repository.ToppingRepository;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -83,7 +83,7 @@ public class OrderItemService {
 
 
     @TranferToResponseEntity
-    public Tranformable createNewOrderItem(OrderItemRequestEntity entity) {
+    public Transformable createNewOrderItem(OrderItemRequestEntity entity) {
         return orderItemRepository.save(OrderItem.builder()
                 .quantity(entity.getQuantity())
                 .listToppingJsonString(convertListToppingMapToString(entity.getListTopping()))
@@ -95,7 +95,7 @@ public class OrderItemService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
+    public Transformable updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
         OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
 
         loadedOrderItem.setQuantity(entity.getQuantity());
@@ -107,22 +107,20 @@ public class OrderItemService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteOrderItemByID(String id) {
+    public Transformable deleteOrderItemByID(String id) {
         OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
         orderItemRepository.deleteById(id);
         return loadedOrderItem;
     }
 
 
-    public List<OrderItemResponseEntity> getOrderItemByOrderID(String id) {
-        return orderItemRepository.getOrderItemByOrderID(id)
-                .stream()
-                .map(OrderItemResponseEntity::fromOrderItem)
-                .toList();
+    @MultipleTransferToResponseEntities
+    public List<? extends Transformable> getOrderItemByOrderID(String id) {
+        return orderItemRepository.getOrderItemByOrderID(id);
     }
 
     @TranferToResponseEntity
-    public Tranformable getOrderItemByID(String id) {
+    public Transformable getOrderItemByID(String id) {
         return orderItemRepository.findById(id).orElseThrow();
     }
 

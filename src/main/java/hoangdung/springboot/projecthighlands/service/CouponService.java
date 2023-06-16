@@ -5,7 +5,7 @@ import hoangdung.springboot.projecthighlands.model.request.CouponRequestEntity;
 import hoangdung.springboot.projecthighlands.model.response.CouponResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.CouponRepository;
 import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class CouponService {
 
 
     @TranferToResponseEntity
-    public Tranformable getCouponByCouponCode(String code) {
+    public Transformable getCouponByCouponCode(String code) {
         return couponRepository.findCouponDtosByCouponCodeIsIgnoreCase(code);
     }
 
@@ -32,7 +32,7 @@ public class CouponService {
 
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
     @TranferToResponseEntity
-    public Tranformable createNewCoupon(CouponRequestEntity entity) {
+    public Transformable createNewCoupon(CouponRequestEntity entity) {
         return couponRepository.save(Coupon.builder()
                 .couponName(entity.getCouponName())
                 .expirationDate(entity.getExpirationDate())
@@ -47,7 +47,7 @@ public class CouponService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingCoupon(String id, CouponRequestEntity entity) {
+    public Transformable updateExistingCoupon(String id, CouponRequestEntity entity) {
         Coupon loadedCoupon = couponRepository.findById(id).orElseThrow();
 
         loadedCoupon.setCouponName(entity.getCouponName());
@@ -64,7 +64,7 @@ public class CouponService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteCouponByID(String id) {
+    public Transformable deleteCouponByID(String id) {
         Coupon loadedCoupon = couponRepository.findById(id).orElseThrow();
         couponRepository.deleteById(id);
         return loadedCoupon;

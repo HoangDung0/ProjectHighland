@@ -9,7 +9,7 @@ import hoangdung.springboot.projecthighlands.repository.CouponRepository;
 import hoangdung.springboot.projecthighlands.repository.CustomerInfoRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
 import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class CustomerInfoService {
 
     // RequestEntity -> Dto == save ==>> DB -> Dto -> ResponseEntity
     @TranferToResponseEntity
-    public Tranformable createNewCustomerInfo(CustomerInfoRequestEntity entity){
+    public Transformable createNewCustomerInfo(CustomerInfoRequestEntity entity){
         return customerInfoRepository.save(CustomerInfo.builder()
                 .point(entity.getPoint())
                 .rank(entity.getRank())
@@ -58,7 +58,7 @@ public class CustomerInfoService {
     }
 
     @TranferToResponseEntity
-    public Tranformable updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) {
+    public Transformable updateExistingCustomerInfo(String id, CustomerInfoRequestEntity entity) {
         CustomerInfo loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
 
         loadedCustomerInfo.setPoint(entity.getPoint());
@@ -70,23 +70,23 @@ public class CustomerInfoService {
     }
 
     @TranferToResponseEntity
-    public Tranformable deleteCustomerByID(String id) {
+    public Transformable deleteCustomerByID(String id) {
         CustomerInfo loadedCustomerInfo = customerInfoRepository.findById(id).orElseThrow();
         customerInfoRepository.deleteById(id);
         return loadedCustomerInfo;
     }
     @TranferToResponseEntity
-    public Tranformable getCustomerByUserID(String userID) {
+    public Transformable getCustomerByUserID(String userID) {
         return customerInfoRepository.getCustomerInfoByUserID(userID);
     }
 
     @TranferToResponseEntity
-    public Tranformable getCustomerByID(String id){
+    public Transformable getCustomerByID(String id){
         return customerInfoRepository.findById(id).orElseThrow();
     }
 
     @TranferToResponseEntity
-    public Tranformable addUsedCoupon(String usedCouponID, String customerID) {
+    public Transformable addUsedCoupon(String usedCouponID, String customerID) {
         CouponResponseEntity entityUsedCoupon = CouponResponseEntity.fromCoupon(couponRepository.findById(usedCouponID).orElseThrow());
         CustomerInfo dtoCustomerInfo = customerInfoRepository.findById(customerID).orElseThrow();
 

@@ -1,6 +1,6 @@
 package hoangdung.springboot.projecthighlands.repository;
 
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.Addresses;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface AddressesRepository extends JpaRepository<Addresses, String> {
 
     @Query("select address from Addresses address where address.user.userID = ?1" )
-    List<Tranformable> getListAddressesByUserID(String id);
+    List<Transformable> getListAddressesByUserID(String id);
 
 
 }

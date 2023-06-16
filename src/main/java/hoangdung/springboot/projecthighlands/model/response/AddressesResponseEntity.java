@@ -1,14 +1,14 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dao.Addresses;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressesResponseEntity implements Tranformable {
+public class AddressesResponseEntity implements Transformable {
 
     private String addressID;
 
@@ -35,7 +35,7 @@ public class AddressesResponseEntity implements Tranformable {
                 .address3(dao.getAddress3())
                 .address4(dao.getAddress4())
                 .phoneNumber(dao.getPhoneNumber())
-                .userID(dao.getUserDto().getUserID())
+                .userID(dao.getUser().getUserID())
                 .build();
     }
 

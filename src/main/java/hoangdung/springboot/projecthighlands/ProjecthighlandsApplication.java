@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ProjecthighlandsApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(ProjecthighlandsApplication.class, args);
 	}
 

@@ -2,7 +2,7 @@ package hoangdung.springboot.projecthighlands.model.response;
 
 import hoangdung.springboot.projecthighlands.model.dao.Product;
 import hoangdung.springboot.projecthighlands.service.ProductService;
-import hoangdung.springboot.projecthighlands.config.aop.Tranformable;
+import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponseEntity implements Tranformable {
+public class ProductResponseEntity implements Transformable {
 
     private String productID;
 
