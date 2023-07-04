@@ -2,9 +2,9 @@ package hoangdung.springboot.projecthighlands.controller;
 
 import hoangdung.springboot.projecthighlands.model.request.TagRequestEntity;
 import hoangdung.springboot.projecthighlands.service.TagService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import static hoangdung.springboot.projecthighlands.common.CommonUtils.controllerWrapper;
@@ -16,32 +16,38 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 public class TagController {
     private final TagService tagService;
 
+    @Operation(summary = "Get All Tags")
     @GetMapping
     private ResponseEntity<?> getAllTags() {
         return controllerWrapper(tagService::getAllTags);
     }
 
+    @Operation(summary = "Get Tag By Tag ID")
     @GetMapping("/{id}")
     private ResponseEntity<?> getTagByID(@PathVariable String id) {
         return controllerWrapper(() -> tagService.getTagByID(id));
     }
 
+    @Operation(summary = "Get Tag By Tag Name")
     @GetMapping("/search")
     private ResponseEntity<?> searchTagsByName(@RequestParam String name) {
         return controllerWrapper(() -> tagService.searchTagsByName(name));
     }
 
+    @Operation(summary = "Create New Tag")
     @PostMapping()
     public ResponseEntity<?> createNewTag(@RequestBody TagRequestEntity dto) {
         return controllerWrapper(() -> tagService.createNewTag(dto));
     }
 
+    @Operation(summary = "Update Existing Tag")
     @PutMapping("/{id}")
     private ResponseEntity<?> updateExistingTag(@PathVariable String id,
                                              @RequestBody TagRequestEntity dto) {
         return controllerWrapper(() -> tagService.updateExistingTag(id, dto));
     }
 
+    @Operation(summary = "Delete Existing Tag")
     @DeleteMapping("/{id}")
     private ResponseEntity<?> deleteTagByID(@PathVariable String id) {
         return controllerWrapper(() -> tagService.deleteTagByID(id));

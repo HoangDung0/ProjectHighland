@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CouponResponseEntity implements Transformable {
 
-    private String couponID;
+    private String id;
 
     private String couponName;
 
@@ -33,7 +33,7 @@ public class CouponResponseEntity implements Transformable {
 
     public static CouponResponseEntity fromCoupon(Coupon dao) {
         return CouponResponseEntity.builder()
-                .couponID(dao.getCouponID())
+                .id(dao.getId())
                 .couponName(dao.getCouponName())
                 .expirationDate(dao.getExpirationDate())
                 .couponCode(dao.getCouponCode())

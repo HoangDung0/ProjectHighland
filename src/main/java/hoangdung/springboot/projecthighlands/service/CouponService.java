@@ -20,7 +20,7 @@ public class CouponService {
 
     @TranferToResponseEntity
     public Transformable getCouponByCouponCode(String code) {
-        return couponRepository.findCouponDtosByCouponCodeIsIgnoreCase(code);
+        return couponRepository.findCouponByCouponCodeIsIgnoreCase(code);
     }
 
     public List<CouponResponseEntity> searchCouponByCouponName(String name) {

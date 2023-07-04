@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerInfoResponseEntity implements Transformable {
 
-    private String customerID;
+    private String id;
 
     private int point;
 
@@ -29,12 +29,12 @@ public class CustomerInfoResponseEntity implements Transformable {
         List<CouponResponseEntity> listUsedCoupons =
                 CustomerInfoService.convertListUsedCouponIDToListUsedCoupons(dao.getUsedCouponJsonString());
         return CustomerInfoResponseEntity.builder()
-                .customerID(dao.getCustomerID())
+                .id(dao.getId())
                 .point(dao.getPoint())
                 .rank(dao.getRank())
                 .cardInfo(dao.getCardInfo())
                 .listUsedCoupons(listUsedCoupons)
-                .userID(dao.getUser().getUserID())
+                .userID(dao.getUser().getId())
                 .build();
     }
 }

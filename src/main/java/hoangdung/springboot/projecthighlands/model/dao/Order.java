@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 
@@ -19,8 +20,10 @@ import java.time.LocalDate;
 public class Order implements Transformable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String orderID;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "orderID")
+    private String id;
 
     private LocalDate createdDate;
 

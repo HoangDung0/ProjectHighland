@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ProductCatalogRequestEntity {
 
-    private String productCatalogID;
+//    private String productCatalogID;
 
     private String productCatalogName;
 

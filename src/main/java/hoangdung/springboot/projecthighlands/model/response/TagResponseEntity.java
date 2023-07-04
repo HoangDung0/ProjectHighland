@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TagResponseEntity implements Transformable {
 
-    private String tagID;
+    private String id;
 
     private String tagName;
 
@@ -23,7 +23,7 @@ public class TagResponseEntity implements Transformable {
 
     public static TagResponseEntity fromTag(Tag dao){
         return  TagResponseEntity.builder()
-                .tagID(dao.getTagID())
+                .id(dao.getId())
                 .tagName(dao.getTagName())
                 .tagColor(dao.getTagColor())
                 .textDescription(dao.getTextDescription())

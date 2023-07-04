@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+
     private final UserRepository userRepository;
 
     @TranferToResponseEntity
@@ -24,7 +25,7 @@ public class UserService {
 
     @MultipleTransferToResponseEntities
     public List<? extends Transformable> getAllUsers() {
-        return  userRepository.findAll();
+        return userRepository.findAll();
     }
 
     @MultipleTransferToResponseEntities
@@ -62,15 +63,15 @@ public class UserService {
         loadedUser.setCreateDate(entity.getCreateDate());
         loadedUser.setActivated(entity.isActivated());
 
-        return loadedUser;
+        return userRepository.save(loadedUser);
     }
 
     @TranferToResponseEntity
     public Transformable updateUserRoleOfExistingUser(String id, String newRole) {
         return userRepository.findById(id)
                 .map(loadedUser -> {
-                    loadedUser.setRole(User.UserRole.valueOf(newRole));
-                    return loadedUser;
+                    loadedUser.setRole(User.UserRole.valueOf(newRole.toString()));
+                    return userRepository.save(loadedUser);
                 }).orElseThrow();
     }
 

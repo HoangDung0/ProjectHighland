@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class OrderItemResponseEntity implements Transformable {
 
-    private String orderItemID;
+    private String id;
 
     private int quantity;
 
@@ -32,13 +32,13 @@ public class OrderItemResponseEntity implements Transformable {
 
     public static OrderItemResponseEntity fromOrderItem(OrderItem dao){
         return OrderItemResponseEntity.builder()
-                .orderItemID(dao.getOderItemID())
+                .id(dao.getId())
                 .quantity(dao.getQuantity())
                 //.listTopping(dao.getListTopping())
                 //.size(dao.getSizeJsonString())
                 .price(dao.getPrice())
-                .orderID(dao.getOrder().getOrderID())
-                .productID(dao.getProduct().getProductID())
+                .orderID(dao.getOrder().getId())
+                .productID(dao.getProduct().getId())
                 .build();
     }
 }

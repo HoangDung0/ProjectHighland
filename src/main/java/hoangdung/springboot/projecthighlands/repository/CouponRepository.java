@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, String> {
 
-    Coupon findCouponDtosByCouponCodeIsIgnoreCase(String code);
+    Coupon findCouponByCouponCodeIsIgnoreCase(String code);
 
     List<Coupon> findCouponsByCouponNameContainingIgnoreCase(String tagName);
 }

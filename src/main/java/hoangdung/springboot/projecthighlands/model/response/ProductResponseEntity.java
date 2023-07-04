@@ -1,15 +1,17 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dao.Product;
-import hoangdung.springboot.projecthighlands.service.ProductService;
+import hoangdung.springboot.projecthighlands.common.MappingUtils;
 import hoangdung.springboot.projecthighlands.config.aop.Transformable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import hoangdung.springboot.projecthighlands.model.dao.Product;
+import hoangdung.springboot.projecthighlands.repository.TagRepository;
+import hoangdung.springboot.projecthighlands.service.ProductService;
+import lombok.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Optional.ofNullable;
 
 @Data
 @Builder
@@ -17,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class ProductResponseEntity implements Transformable {
 
-    private String productID;
+    private String id;
 
     private String productName;
 
@@ -33,17 +35,18 @@ public class ProductResponseEntity implements Transformable {
 
     private String productCatalogID;
 
-    public static ProductResponseEntity fromProduct(Product dao)  {
 
+    public static ProductResponseEntity fromProduct(Product dao) {
+        final TagRepository tagRepository = null;
         return ProductResponseEntity.builder()
-                .productID(dao.getProductID())
+                .id(dao.getId())
                 .productName(dao.getProductName())
                 .description(dao.getDescription())
                 .price(dao.getPrice())
                 .imageUrl(dao.getImageUrl())
-                .sizeOption(ProductService.convertSizeOptionStringToMap(dao.getSizeOptionJsonString()))
-                .listTag(ProductService.convertListTagIDToListTag(dao.getTagJsonString()))
-                .productCatalogID(dao.getProductCatalog().getProductCatalogID())
+                .sizeOption(ofNullable(dao.getSizeOptionJsonString()).map(ProductService::convertSizeOptionStringToMap).orElse(null))
+                .listTag(ofNullable(dao.getTagJsonString()).map(s -> MappingUtils.convertIdsToObjects(s, (JpaRepository) tagRepository)).orElse(null))
+                .productCatalogID(dao.getProductCatalog().getId())
                 .build();
     }
 

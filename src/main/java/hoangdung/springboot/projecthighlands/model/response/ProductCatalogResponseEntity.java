@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductCatalogResponseEntity implements Transformable {
 
-    private String productCatalogID;
+    private String id;
 
     private String productCatalogName;
 
@@ -23,7 +23,7 @@ public class ProductCatalogResponseEntity implements Transformable {
 
     public static ProductCatalogResponseEntity fromProductCatalog(ProductCatalog dao) {
         return  ProductCatalogResponseEntity.builder()
-                .productCatalogID(dao.getProductCatalogID())
+                .id(dao.getId())
                 .productCatalogName(dao.getProductCatalogName())
                 .description(dao.getDescription())
                 .thumbnailUrl(dao.getThumbnailUrl())

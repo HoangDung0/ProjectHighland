@@ -40,7 +40,7 @@ public class CustomerInfoService {
     public String convertListUsedCouponsToListUsedCouponID(List<CouponResponseEntity> listUsedCoupons) {
         List<String> listUsedCouponID = listUsedCoupons
                 .stream()
-                .map(CouponResponseEntity::getCouponID)
+                .map(CouponResponseEntity::getId)
                 .toList();
         return objectMapper.writeValueAsString(listUsedCouponID);
     }

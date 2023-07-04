@@ -44,7 +44,7 @@ public class OrderService {
             throw new Exception();
         } else {
             //tính giảm giá = coupon
-            Coupon coupon = couponRepository.findCouponDtosByCouponCodeIsIgnoreCase(entity.getCouponCode());
+            Coupon coupon = couponRepository.findCouponByCouponCodeIsIgnoreCase(entity.getCouponCode());
             //Kiểm tra tổng hóa đơn có đủ để áp dụng coupon ko
             if (coupon.getMinOrderAmount() > totalPrice) {
                 throw new Exception();

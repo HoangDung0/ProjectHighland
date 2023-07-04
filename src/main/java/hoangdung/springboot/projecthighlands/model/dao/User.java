@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -18,8 +19,10 @@ import java.util.Date;
 public class User implements Transformable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String userID;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "userID")
+    private String id;
 
     private String userName;
 
@@ -29,16 +32,14 @@ public class User implements Transformable {
 
     private String email;
 
-    private Date dayOfBirth;
+    private LocalDate dayOfBirth;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     private boolean sex;
 
-//    private String listAddressesID;
-
-    private Date createDate;
+    private LocalDate createDate;
 
     private boolean activated;
 

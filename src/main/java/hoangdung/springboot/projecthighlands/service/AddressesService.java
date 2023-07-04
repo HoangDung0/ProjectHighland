@@ -26,11 +26,7 @@ public class AddressesService {
     }
 
     @MultipleTransferToResponseEntities
-    public List<Transformable> getAllAddressesByUserID(String id) {
-//        return addressesRepository.getListAddressesByUserID(id)
-//                .stream()
-//                .map(AddressesResponseEntity::fromAddressesDto)
-//                .toList();
+    public List<? extends Transformable> getAllAddressesByUserID(String id) {
         return addressesRepository.getListAddressesByUserID(id);
 
     }

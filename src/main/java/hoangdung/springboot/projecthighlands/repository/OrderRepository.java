@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String > {
-    @Query("select order from Order order where order.user.userID = ?1 and order.couponCode = ?2 " +
+    @Query("select order from Order order where order.user.id = ?1 and order.couponCode = ?2 " +
             "and (order.orderStatus = 'PLACED' or order.orderStatus = 'COMPLETED') ")
     List<Order> getOrderByUserIDAndCouponCode(String id, String couponCode);
 }

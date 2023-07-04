@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class OrderResponseEntity implements Transformable {
 
-    private String orderID;
+    private String id;
 
     private LocalDate createdDate;
 
@@ -46,7 +46,7 @@ public class OrderResponseEntity implements Transformable {
 
     public static OrderResponseEntity fromOrder(Order dao) {
         return OrderResponseEntity.builder()
-                .orderID(dao.getOrderID())
+                .id(dao.getId())
                 .createdDate(dao.getCreatedDate())
                 .lastUpdateDate(dao.getLastUpdateDate())
                 .address1(dao.getAddress1())
@@ -59,7 +59,7 @@ public class OrderResponseEntity implements Transformable {
                 .orderStatus(dao.getOrderStatus().toString())
                 .paymentMethod(dao.getPaymentMethod().toString())
                 .pickUpOption(dao.getPickUpOption().toString())
-                .userID(dao.getUser().getUserID())
+                .userID(dao.getUser().getId())
                 .build();
     }
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ToppingResponseEntity implements Transformable {
 
-    private String toppingID;
+    private String id;
 
     private String toppingName;
 
@@ -25,7 +25,7 @@ public class ToppingResponseEntity implements Transformable {
 
     public static ToppingResponseEntity fromTopping(Topping dao){
         return  ToppingResponseEntity.builder()
-                .toppingID(dao.getToppingID())
+                .id(dao.getId())
                 .toppingName(dao.getToppingName())
                 .price(dao.getPrice())
                 .description(dao.getDescription())

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 @Data
 @Entity
@@ -17,8 +18,10 @@ import lombok.NoArgsConstructor;
 public class Product implements Transformable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String productID;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "productID")
+    private String id;
 
     private String productName;
 

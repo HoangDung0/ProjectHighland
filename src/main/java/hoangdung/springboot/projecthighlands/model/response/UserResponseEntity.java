@@ -1,10 +1,13 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dao.User;
 import hoangdung.springboot.projecthighlands.config.aop.Transformable;
-import lombok.*;
+import hoangdung.springboot.projecthighlands.model.dao.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -12,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserResponseEntity implements Transformable {
 
-    private String userID;
+    private String id;
 
     private String userName;
 
@@ -22,13 +25,13 @@ public class UserResponseEntity implements Transformable {
 
     private String email;
 
-    private Date dayOfBirth;
+    private LocalDate dayOfBirth;
 
     private String role;
 
     private boolean sex;
 
-    private Date createDate;
+    private LocalDate createDate;
 
     private boolean activated;
 
@@ -36,7 +39,7 @@ public class UserResponseEntity implements Transformable {
     public static UserResponseEntity fromUser(User dao)  {
 //        List<AddressesDto> addressesDtoList = AddressesService.convertListAddressesIDToListAddresses(dao.getListAddressesID());
         return  UserResponseEntity.builder()
-                .userID(dao.getUserID())
+                .id(dao.getId())
                 .userName(dao.getUserName())
                 .password(dao.getPassword())
                 .phone(dao.getPhone())
@@ -44,7 +47,6 @@ public class UserResponseEntity implements Transformable {
                 .dayOfBirth(dao.getDayOfBirth())
                 .role(dao.getRole().toString())
                 .sex(dao.isSex())
-//                .listAddressesDto(addressesDtoList)
                 .createDate(dao.getCreateDate())
                 .activated(dao.isActivated())
                 .build();
