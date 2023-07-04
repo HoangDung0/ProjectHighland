@@ -20,13 +20,13 @@ public class CouponController {
 
     @Operation(summary = "Get Coupon By Coupon Code")
     @GetMapping("/{code}")
-    private ResponseEntity<?> getCouponByCouponCode(@PathVariable String code) {
+    public ResponseEntity<?> getCouponByCouponCode(@PathVariable String code) {
         return controllerWrapper(() -> couponService.getCouponByCouponCode(code));
     }
 
     @Operation(summary = "Search Coupon By Coupon Name")
     @GetMapping("/search")
-    private ResponseEntity<?> searchCouponByCouponName(@RequestParam String name) {
+    public ResponseEntity<?> searchCouponByCouponName(@RequestParam String name) {
         return controllerWrapper(() -> couponService.searchCouponByCouponName(name));
     }
 
@@ -38,14 +38,14 @@ public class CouponController {
 
     @Operation(summary = "Update Existing Coupon")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingCoupon(@PathVariable String id,
+    public ResponseEntity<?> updateExistingCoupon(@PathVariable String id,
                                                    @RequestBody CouponRequestEntity entity) {
         return controllerWrapper(() -> couponService.updateExistingCoupon(id, entity));
     }
 
     @Operation(summary = "Delete Existing Coupon")
     @DeleteMapping("/{id}")
-    private ResponseEntity<?> deleteCouponByID(@PathVariable String id) {
+    public ResponseEntity<?> deleteCouponByID(@PathVariable String id) {
         return controllerWrapper(() -> couponService.deleteCouponByID(id));
     }
 }

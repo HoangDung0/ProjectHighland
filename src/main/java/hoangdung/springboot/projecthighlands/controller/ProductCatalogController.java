@@ -19,19 +19,19 @@ public class ProductCatalogController {
 
     @Operation(summary = "Get All Product Catalogs")
     @GetMapping
-    private ResponseEntity<?> getAllProductCatalogs() {
+    public ResponseEntity<?> getAllProductCatalogs() {
         return controllerWrapper(catalogService::getAllProductCatalogs);
     }
 
     @Operation(summary = "Get Product Catalog By ID")
     @GetMapping("/{id}")
-    private ResponseEntity<?> getProductCatalogById(@PathVariable String id) {
+    public ResponseEntity<?> getProductCatalogById(@PathVariable String id) {
         return controllerWrapper(() -> catalogService.getProductCatalogById(id));
     }
 
     @Operation(summary = "Get Product Catalog By Name")
     @GetMapping("/search")
-    private ResponseEntity<?> searchProductCatalogsByName(@RequestParam String name) {
+    public ResponseEntity<?> searchProductCatalogsByName(@RequestParam String name) {
         return controllerWrapper(() -> catalogService.searchProductCatalogsByName(name));
     }
 
@@ -43,14 +43,14 @@ public class ProductCatalogController {
 
     @Operation(summary = "Update Product Catalog")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingProductCatalog(@PathVariable String id,
+    public ResponseEntity<?> updateExistingProductCatalog(@PathVariable String id,
                                              @RequestBody ProductCatalogRequestEntity dto) {
         return controllerWrapper(() -> catalogService.updateExistingProductCatalog(id, dto));
     }
 
     @Operation(summary = "Delete Product Catalog")
     @DeleteMapping("/{id}")
-    private ResponseEntity<?> deleteProductCatalogByID(@PathVariable String id) {
+    public ResponseEntity<?> deleteProductCatalogByID(@PathVariable String id) {
         return controllerWrapper(() -> catalogService.deleteProductCatalogByID(id));
     }
 }

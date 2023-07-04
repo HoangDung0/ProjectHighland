@@ -20,13 +20,13 @@ public class OrderItemController {
 
     @Operation(summary = "Get Order Item By Order ID")
     @GetMapping("/oderid/{orderID}")
-    private ResponseEntity<?> getOrderItemByOrderID(@PathVariable String orderID) {
+    public ResponseEntity<?> getOrderItemByOrderID(@PathVariable String orderID) {
         return controllerWrapper(() -> orderItemService.getOrderItemByOrderID(orderID));
     }
 
     @Operation(summary = "Get Order Item By ID")
     @GetMapping("/{id}")
-    private ResponseEntity<?> getOrderItemByID(@PathVariable String id) {
+    public ResponseEntity<?> getOrderItemByID(@PathVariable String id) {
         return controllerWrapper(() -> orderItemService.getOrderItemByID(id));
     }
 
@@ -38,14 +38,14 @@ public class OrderItemController {
 
     @Operation(summary = "Update Order Item")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingOrderItem(@PathVariable String id,
+    public ResponseEntity<?> updateExistingOrderItem(@PathVariable String id,
                                                       @RequestBody OrderItemRequestEntity entity) {
         return controllerWrapper(() -> orderItemService.updateExistingOrderItem(id, entity));
     }
 
     @Operation(summary = "Delete Order Item")
     @DeleteMapping("/{id}")
-    private ResponseEntity<?> deleteProductCatalogByID(@PathVariable String id) {
+    public ResponseEntity<?> deleteProductCatalogByID(@PathVariable String id) {
         return controllerWrapper(() -> orderItemService.deleteOrderItemByID(id));
     }
 

@@ -20,13 +20,13 @@ public class CustomerInfoController {
 
     @Operation(summary = "Get Customer By UserID")
     @GetMapping("/userID/{userid}")
-    private ResponseEntity<?> getCustomerByUserID(@PathVariable String userid) {
+    public ResponseEntity<?> getCustomerByUserID(@PathVariable String userid) {
         return controllerWrapper(() -> customerInfoService.getCustomerByUserID(userid));
     }
 
     @Operation(summary = "Get Customer By ID")
     @GetMapping("/{id}")
-    private ResponseEntity<?> getCustomerByID(@PathVariable String id){
+    public ResponseEntity<?> getCustomerByID(@PathVariable String id){
         return controllerWrapper(() -> customerInfoService.getCustomerByID(id));
     }
 
@@ -38,20 +38,20 @@ public class CustomerInfoController {
 
     @Operation(summary = "Update Existing Customer Info")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingCustomerInfo(@PathVariable String id,
+    public ResponseEntity<?> updateExistingCustomerInfo(@PathVariable String id,
                                                          @RequestBody CustomerInfoRequestEntity entity) {
         return controllerWrapper(() -> customerInfoService.updateExistingCustomerInfo(id, entity));
     }
 
     @Operation(summary = "Add Used Coupon")
     @PutMapping("/usedcoupon/{id}")
-    private ResponseEntity<?> addUsedCoupon(@RequestParam String usedCouponID, String id) {
+    public ResponseEntity<?> addUsedCoupon(@RequestParam String usedCouponID, String id) {
         return controllerWrapper(() -> customerInfoService.addUsedCoupon(usedCouponID, id));
     }
 
     @Operation(summary = "Delete Customer By ID")
     @DeleteMapping("/{id}")
-    private ResponseEntity<?> deleteCustomerByID(@PathVariable String id) {
+    public ResponseEntity<?> deleteCustomerByID(@PathVariable String id) {
         return controllerWrapper(() -> customerInfoService.deleteCustomerByID(id));
     }
 }

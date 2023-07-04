@@ -29,27 +29,25 @@ public class UserController {
 
     private final UserService userService;
 
-    public final AddressesService addressesService;
+    private final AddressesService addressesService;
 
-
-    public UserRequestEntity userRequestEntity;
 
     @Operation(summary = "Get All User")
     @GetMapping
-    private ResponseEntity<?> getAllUser() throws JsonProcessingException {
+    public ResponseEntity<?> getAllUser() throws JsonProcessingException {
         return controllerWrapper(userService::getAllUsers);
 //        return  ResponseEntity.ok().body(userService.getAllUsers());
     }
 
     @Operation(summary = "Get User By UserID")
     @GetMapping("/{id}")
-    private ResponseEntity<?> getUserByID(@PathVariable String id) {
+    public ResponseEntity<?> getUserByID(@PathVariable String id) {
         return controllerWrapper(() -> userService.getUserById(id));
     }
 
     @Operation(summary = "Search User By User Name")
     @GetMapping("/search")
-    private ResponseEntity<?> searchUsersByName(@RequestParam String name)  {
+    public ResponseEntity<?> searchUsersByName(@RequestParam String name)  {
         return controllerWrapper(() -> userService.searchUsersByName(name));
     }
 
@@ -61,7 +59,7 @@ public class UserController {
 
     @Operation(summary = "Update Existing User By User ID")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingUser(@PathVariable String id,
+    public ResponseEntity<?> updateExistingUser(@PathVariable String id,
                                                  @RequestBody UserRequestEntity dto) {
 
         // PUT /users/{id}      => userWithId.update(newUser)
@@ -72,14 +70,14 @@ public class UserController {
 
     @Operation(summary = "Update User Role By User ID")
     @PutMapping("/{id}/role")
-    private ResponseEntity<?> updateUserRoleOfExistingUser(@PathVariable String id,
+    public ResponseEntity<?> updateUserRoleOfExistingUser(@PathVariable String id,
                                                            @RequestParam String newRole) {
         return controllerWrapper(() -> userService.updateUserRoleOfExistingUser(id, newRole));
     }
 
     @Operation(summary = "Delete User By User ID")
     @DeleteMapping()
-    private ResponseEntity<?> deleteUserByID(@RequestParam String id) {
+    public ResponseEntity<?> deleteUserByID(@RequestParam String id) {
         return controllerWrapper(() -> userService.deleteUserByID(id));
     }
 
@@ -88,7 +86,7 @@ public class UserController {
 
     @Operation(summary = "Get Addresses By Addresses ID")
     @GetMapping("/{id}/adrresses/{addressID}")
-    private ResponseEntity<?> getAddressesById(@PathVariable String id,
+    public ResponseEntity<?> getAddressesById(@PathVariable String id,
                                                @PathVariable String addressID) {
         return controllerWrapper(() -> addressesService.getAddressesById(addressID));
 //        return ResponseEntity.ok().body(addressesService.getAddressesById(addressID));
@@ -96,7 +94,7 @@ public class UserController {
 
     @Operation(summary = "Get All Addresses By User ID")
     @GetMapping("/{id}/addresses")
-    private ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id) {
+    public ResponseEntity<?> getAllAddressesByUserID(@PathVariable String id) {
         return controllerWrapper(() -> addressesService.getAllAddressesByUserID(id));
     }
 
@@ -109,7 +107,7 @@ public class UserController {
 
     @Operation(summary = "Update Existing Addresses By Addresses ID")
     @PutMapping("/{id}/addresses/{addressID}")
-    private ResponseEntity<?> updateExistingAddresses(@PathVariable String id,
+    public ResponseEntity<?> updateExistingAddresses(@PathVariable String id,
                                                       @PathVariable String addressID,
                                                       @RequestBody AddressesRequestEntity requestEntity) {
         return controllerWrapper(() -> addressesService.updateExistingAddresses(addressID, requestEntity));
@@ -117,7 +115,7 @@ public class UserController {
 
     @Operation(summary = "Delete Existing Addresses By Addresses ID")
     @DeleteMapping("/{id}/addresses/{addressID}")
-    private ResponseEntity<?> deleteAddressesByID(@PathVariable String id,
+    public ResponseEntity<?> deleteAddressesByID(@PathVariable String id,
                                                   @PathVariable String addressID) {
         return controllerWrapper(() -> addressesService.deleteAddressesByID(addressID));
     }

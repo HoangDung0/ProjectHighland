@@ -18,19 +18,19 @@ public class TagController {
 
     @Operation(summary = "Get All Tags")
     @GetMapping
-    private ResponseEntity<?> getAllTags() {
+    public ResponseEntity<?> getAllTags() {
         return controllerWrapper(tagService::getAllTags);
     }
 
     @Operation(summary = "Get Tag By Tag ID")
     @GetMapping("/{id}")
-    private ResponseEntity<?> getTagByID(@PathVariable String id) {
+    public ResponseEntity<?> getTagByID(@PathVariable String id) {
         return controllerWrapper(() -> tagService.getTagByID(id));
     }
 
     @Operation(summary = "Get Tag By Tag Name")
     @GetMapping("/search")
-    private ResponseEntity<?> searchTagsByName(@RequestParam String name) {
+    public ResponseEntity<?> searchTagsByName(@RequestParam String name) {
         return controllerWrapper(() -> tagService.searchTagsByName(name));
     }
 
@@ -42,14 +42,14 @@ public class TagController {
 
     @Operation(summary = "Update Existing Tag")
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateExistingTag(@PathVariable String id,
+    public ResponseEntity<?> updateExistingTag(@PathVariable String id,
                                              @RequestBody TagRequestEntity dto) {
         return controllerWrapper(() -> tagService.updateExistingTag(id, dto));
     }
 
     @Operation(summary = "Delete Existing Tag")
     @DeleteMapping("/{id}")
-    private ResponseEntity<?> deleteTagByID(@PathVariable String id) {
+    public ResponseEntity<?> deleteTagByID(@PathVariable String id) {
         return controllerWrapper(() -> tagService.deleteTagByID(id));
     }
 }
