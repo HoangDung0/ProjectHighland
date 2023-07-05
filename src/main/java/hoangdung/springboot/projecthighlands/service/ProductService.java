@@ -1,7 +1,6 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import hoangdung.springboot.projecthighlands.config.aop.Transformable;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,27 +44,17 @@ public class ProductService {
 //    }
 
 
-    @SneakyThrows
-    public String convertListTagToListTagID(List<TagResponseEntity> listTag) {
-        List<String> listTagID = listTag
-                .stream()
-                .map(TagResponseEntity::getId)
-                .toList();
-        return objectMapper.writeValueAsString(listTagID);
-    }
-
 //    @SneakyThrows
-//    public static Map<String, Integer> convertSizeOptionStringToMap(String sizeOptionJsonString) {
-//        return objectMapper.readValue(sizeOptionJsonString, HashMap.class);
-//    }
-//
-//    @SneakyThrows
-//    public static String convertSizeOptionMapToString(Map<String, Integer> sizeOption) {
-//        return objectMapper.writeValueAsString(sizeOption);
+//    public String convertListTagToListTagID(List<TagResponseEntity> listTag) {
+//        List<String> listTagID = listTag
+//                .stream()
+//                .map(TagResponseEntity::getId)
+//                .toList();
+//        return objectMapper.writeValueAsString(listTagID);
 //    }
 
     @SneakyThrows
-    private Transformable mapFromProductToResponseEntity(Product persistedProduct){
+    private Transformable mapFromProductToResponseEntity(Product persistedProduct) {
         var mappedResponse = ProductResponseEntity.fromProduct(persistedProduct);
         mappedResponse.setSizeOption(objectMapper.readValue(persistedProduct.getSizeOptionJsonString(), HashMap.class));
 
@@ -137,7 +125,7 @@ public class ProductService {
     //CRUD của Size Option
 
     @SneakyThrows
-    public Transformable addSizeOption(String productID, String size, int price)  {
+    public Transformable addSizeOption(String productID, String size, int price) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
         var sizeOption = ofNullable(loadedProduct.getSizeOptionJsonString())
                 .map(s -> {
@@ -193,10 +181,10 @@ public class ProductService {
         tagRepository.findById(tagID).orElseThrow();
 
         //3. Lấy ra json chứa list các ID
-        var tagsJson = ofNullable(loadedProduct.getTagJsonString()).orElse( "[]");
+        var tagsJson = ofNullable(loadedProduct.getTagJsonString()).orElse("[]");
 
         //4. Đọc array json và thêm mới vào
-        var  tags = (ArrayNode) objectMapper.readTree(tagsJson);
+        var tags = (ArrayNode) objectMapper.readTree(tagsJson);
         tags.add(tagID);
 
         //5. Chuyển đổi list có giá trị mới sang Json và gắn vào Product
@@ -207,29 +195,21 @@ public class ProductService {
 
     }
 
+    @SneakyThrows
     public Transformable deleteTag(String productID, String tagID) {
         Product loadedProduct = productRepository.findById(productID).orElseThrow();
 
-        var listTag = ofNullable(loadedProduct.getTagJsonString())
-                .map(s -> {
-                    try {
-                        return objectMapper.readValue(s, new TypeReference<List<TagResponseEntity>>() {
-                                })
-                                .stream()
-                                .map(x -> tagRepository.findById(x.getId()).orElseThrow())
-                                .map(TagResponseEntity::fromTag)
-                                .toList();
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .orElse(new ArrayList<>());
+        var tagsJson = ofNullable(loadedProduct.getTagJsonString()).orElse("[]");
 
-        listTag.stream()
-                .filter(tagEntity -> tagEntity.getId().equalsIgnoreCase(tagID))
-                .forEach(listTag::remove);
+        var tags = (ArrayNode) objectMapper.readTree(tagsJson);
 
-        loadedProduct.setTagJsonString(convertListTagToListTagID(listTag));
+        for (int i = 0; i < tags.size(); i++) {
+            if(tags.get(i).asText().equalsIgnoreCase(tagID)){
+                tags.remove(i);
+            }
+        }
+
+        loadedProduct.setTagJsonString(tags.toString());
 
         return mapFromProductToResponseEntity(productRepository.save(loadedProduct));
     }

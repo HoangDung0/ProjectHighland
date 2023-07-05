@@ -34,8 +34,6 @@ public class OrderItemResponseEntity implements Transformable {
         return OrderItemResponseEntity.builder()
                 .id(dao.getId())
                 .quantity(dao.getQuantity())
-                //.listTopping(dao.getListTopping())
-                //.size(dao.getSizeJsonString())
                 .price(dao.getPrice())
                 .orderID(dao.getOrder().getId())
                 .productID(dao.getProduct().getId())

@@ -1,9 +1,11 @@
 package hoangdung.springboot.projecthighlands.model.response;
 
-import hoangdung.springboot.projecthighlands.model.dao.CustomerInfo;
-import hoangdung.springboot.projecthighlands.service.CustomerInfoService;
 import hoangdung.springboot.projecthighlands.config.aop.Transformable;
-import lombok.*;
+import hoangdung.springboot.projecthighlands.model.dao.CustomerInfo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -26,15 +28,13 @@ public class CustomerInfoResponseEntity implements Transformable {
     private String userID;
 
     public static CustomerInfoResponseEntity fromCustomerInfo(CustomerInfo dao)  {
-        List<CouponResponseEntity> listUsedCoupons =
-                CustomerInfoService.convertListUsedCouponIDToListUsedCoupons(dao.getUsedCouponJsonString());
         return CustomerInfoResponseEntity.builder()
                 .id(dao.getId())
                 .point(dao.getPoint())
                 .rank(dao.getRank())
                 .cardInfo(dao.getCardInfo())
-                .listUsedCoupons(listUsedCoupons)
                 .userID(dao.getUser().getId())
                 .build();
     }
+
 }
