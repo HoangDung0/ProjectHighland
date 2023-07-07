@@ -1,11 +1,10 @@
 package hoangdung.springboot.projecthighlands.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hoangdung.springboot.projecthighlands.config.aop.MultipleTransferToResponseEntities;
-import hoangdung.springboot.projecthighlands.config.aop.TranferToResponseEntity;
 import hoangdung.springboot.projecthighlands.config.aop.Transformable;
 import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.model.request.OrderItemRequestEntity;
+import hoangdung.springboot.projecthighlands.model.response.OrderItemResponseEntity;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.ProductRepository;
@@ -34,24 +33,36 @@ public class OrderItemService {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     @SneakyThrows
-    public static Map<String, Integer> convertSizeStringToMap(String sizeJsonString) {
+    public Map<String, Integer> convertSizeStringToMap(String sizeJsonString) {
         return objectMapper.readValue(sizeJsonString, Map.class);
     }
 
     @SneakyThrows
-    public static String convertSizeMapToString(Map<String, Integer> size) {
+    public String convertSizeMapToString(Map<String, Integer> size) {
         return objectMapper.writeValueAsString(size);
     }
 
     @SneakyThrows
-    public static Map<String, Integer> convertListToppingStringToMap(String listToppingJsonString) {
+    public Map<String, Integer> convertListToppingStringToMap(String listToppingJsonString) {
         return objectMapper.readValue(listToppingJsonString, HashMap.class);
     }
 
     @SneakyThrows
-    public static String convertListToppingMapToString(Map<String, Integer> listTopping) {
+    public String convertListToppingMapToString(Map<String, Integer> listTopping) {
         return objectMapper.writeValueAsString(listTopping);
     }
+
+    @SneakyThrows
+    private Transformable mapFromOrderItemToResponseEntity(OrderItem persistedOrderItem) {
+        var mappedResponse = OrderItemResponseEntity.fromOrderItem(persistedOrderItem);
+
+        mappedResponse.setSize(convertSizeStringToMap(persistedOrderItem.getSizeJsonString()));
+
+        mappedResponse.setListTopping(convertListToppingStringToMap(persistedOrderItem.getListToppingJsonString()));
+
+        return mappedResponse;
+    }
+
 
     public float pricePerOrderItem(OrderItemRequestEntity entity) {
         Map<String, Integer> listTopping = entity.getListTopping();
@@ -81,20 +92,19 @@ public class OrderItemService {
 
     }
 
-
-    @TranferToResponseEntity
     public Transformable createNewOrderItem(OrderItemRequestEntity entity) {
-        return orderItemRepository.save(OrderItem.builder()
+        OrderItem prepareOrderItem = OrderItem.builder()
                 .quantity(entity.getQuantity())
                 .listToppingJsonString(convertListToppingMapToString(entity.getListTopping()))
                 .price(pricePerOrderItem(entity))
                 .order(orderRepository.findById(entity.getOrderID()).orElseThrow())
                 .product(productRepository.findById(entity.getProductID()).orElseThrow())
                 .sizeJsonString(convertSizeMapToString(entity.getSize()))
-                .build());
+                .build();
+
+        return mapFromOrderItemToResponseEntity(orderItemRepository.save(prepareOrderItem));
     }
 
-    @TranferToResponseEntity
     public Transformable updateExistingOrderItem(String id, OrderItemRequestEntity entity) {
         OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
 
@@ -103,25 +113,26 @@ public class OrderItemService {
         loadedOrderItem.setSizeJsonString(convertSizeMapToString(entity.getSize()));
         loadedOrderItem.setPrice(pricePerOrderItem(entity));
 
-        return orderItemRepository.save(loadedOrderItem);
+        return mapFromOrderItemToResponseEntity(orderItemRepository.save(loadedOrderItem));
     }
 
-    @TranferToResponseEntity
+
     public Transformable deleteOrderItemByID(String id) {
         OrderItem loadedOrderItem = orderItemRepository.findById(id).orElseThrow();
         orderItemRepository.deleteById(id);
-        return loadedOrderItem;
+        return mapFromOrderItemToResponseEntity(loadedOrderItem);
     }
 
 
-    @MultipleTransferToResponseEntities
+
     public List<? extends Transformable> getOrderItemByOrderID(String id) {
-        return orderItemRepository.getOrderItemByOrderID(id);
+        return orderItemRepository.getOrderItemByOrderID(id).stream()
+                .map(this::mapFromOrderItemToResponseEntity)
+                .toList();
     }
 
-    @TranferToResponseEntity
     public Transformable getOrderItemByID(String id) {
-        return orderItemRepository.findById(id).orElseThrow();
+        return mapFromOrderItemToResponseEntity(orderItemRepository.findById(id).orElseThrow());
     }
 
 }
