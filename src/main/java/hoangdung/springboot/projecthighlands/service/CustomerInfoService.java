@@ -23,13 +23,13 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class CustomerInfoService {
 
-    public static CouponRepository couponRepository;
+    public final CouponRepository couponRepository;
 
-    public static CustomerInfoRepository customerInfoRepository;
+    public final CustomerInfoRepository customerInfoRepository;
 
-    public static UserRepository userRepository;
+    public final UserRepository userRepository;
 
-    private  ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 //    @SneakyThrows
 //    public static List<CouponResponseEntity> convertListUsedCouponIDToListUsedCoupons(String listUsedCoupon) {

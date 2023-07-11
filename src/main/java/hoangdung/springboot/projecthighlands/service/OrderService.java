@@ -7,6 +7,7 @@ import hoangdung.springboot.projecthighlands.model.dao.Coupon;
 import hoangdung.springboot.projecthighlands.model.dao.Order;
 import hoangdung.springboot.projecthighlands.model.dao.OrderItem;
 import hoangdung.springboot.projecthighlands.model.request.OrderRequestEntity;
+import hoangdung.springboot.projecthighlands.repository.CouponRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderItemRepository;
 import hoangdung.springboot.projecthighlands.repository.OrderRepository;
 import hoangdung.springboot.projecthighlands.repository.UserRepository;
@@ -17,17 +18,17 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-import static hoangdung.springboot.projecthighlands.service.CustomerInfoService.couponRepository;
-
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
-    public static OrderRepository orderRepository;
+    public final OrderRepository orderRepository;
 
-    public static OrderItemRepository orderItemRepository;
+    public final OrderItemRepository orderItemRepository;
 
-    public static UserRepository userRepository;
+    public final UserRepository userRepository;
+
+    public final CouponRepository couponRepository;
 
     @SneakyThrows
     public float calculatePrice(String id, OrderRequestEntity entity) {
@@ -98,6 +99,7 @@ public class OrderService {
         loadedOrder.setPaymentMethod(Order.PaymentMethod.valueOf(entity.getPaymentMethod()));
         loadedOrder.setPickUpOption(Order.PickUpOption.valueOf(entity.getPickUpOption()));
         loadedOrder.setPickUpStore(entity.getPickUpStore());
+        loadedOrder.setCouponCode(entity.getCouponCode());
         loadedOrder.setAddress1(entity.getAddress1());
         loadedOrder.setAddress2(entity.getAddress2());
         loadedOrder.setAddress3(entity.getAddress3());

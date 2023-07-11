@@ -22,15 +22,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OrderItemService {
 
-    public static OrderItemRepository orderItemRepository;
+    public final OrderItemRepository orderItemRepository;
 
-    public static OrderRepository orderRepository;
+    public final OrderRepository orderRepository;
 
-    public static ProductRepository productRepository;
+    public final ProductRepository productRepository;
 
-    public static ToppingRepository toppingRepository;
+    public final ToppingRepository toppingRepository;
 
-    public static ObjectMapper objectMapper = new ObjectMapper();
+    public ObjectMapper objectMapper = new ObjectMapper();
 
     @SneakyThrows
     public Map<String, Integer> convertSizeStringToMap(String sizeJsonString) {

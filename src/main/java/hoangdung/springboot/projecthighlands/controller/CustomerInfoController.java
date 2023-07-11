@@ -15,7 +15,7 @@ import static hoangdung.springboot.projecthighlands.common.CommonUtils.controlle
 @RequestMapping("/customerinfos")
 public class CustomerInfoController {
 
-    private final CustomerInfoService customerInfoService;
+    public final CustomerInfoService customerInfoService;
 
 
     @Operation(summary = "Get Customer By UserID")
